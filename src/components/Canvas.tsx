@@ -1,7 +1,7 @@
 import { useLayoutEffect, useReducer, useRef } from 'react';
 import rough from 'roughjs';
-import reducer from '../utils/figuresReducer';
-import { getElementWithPosition, cursorStyle } from '../utils/elementsUtils';
+import reducer from '../utils/canvasReducer';
+import { cursorStyle, getElementPosition } from '../utils/canvasUtils';
 
 export default function Canvas({
   width,
@@ -16,8 +16,6 @@ export default function Canvas({
   const [{ history, currentStep }, dispatch] = useReducer(reducer, {
     history: [[]],
     currentStep: 0,
-    selected: null,
-    cursor: {},
   });
 
   const elements = history[currentStep];
@@ -52,8 +50,8 @@ export default function Canvas({
 
     if (tool === 'selection' && event.buttons === 0) {
       const target = event.target as HTMLElement;
-      const { cursor } = getElementWithPosition({ x, y }, elements);
-      target.style.cursor = cursorStyle(cursor.position);
+      const position = getElementPosition(elements, { x, y });
+      target.style.cursor = cursorStyle(position);
     }
 
     dispatch({ type: 'move', x, y });

@@ -1,15 +1,26 @@
 import { Drawable } from 'roughjs/bin/core';
 import { Point, Position } from '../types';
 
-export interface BasicFigure extends Position {
+export type FigureProps = {
   id: number;
-}
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  offset?: Point;
+  position?: string;
+  selected?: boolean;
+};
+
 export default abstract class Figure {
   id: number;
   x1: number;
   y1: number;
   x2: number;
   y2: number;
+  offset: Point;
+  position: string;
+  selected: boolean;
 
   abstract drawable: Drawable;
 
@@ -22,27 +33,44 @@ export default abstract class Figure {
     IN: 'INSIDE',
   };
 
-  constructor({ id, x1, x2, y1, y2 }: BasicFigure) {
-    this.id = id;
-    this.x1 = x1;
-    this.y1 = y1;
-    this.x2 = x2;
-    this.y2 = y2;
+  constructor(props: FigureProps) {
+    this.id = props.id;
+    this.x1 = props.x1;
+    this.y1 = props.y1;
+    this.x2 = props.x2;
+    this.y2 = props.y2;
+    this.offset = props.offset ?? { x: 0, y: 0 };
+    this.position = props.position ?? Figure.POSITION.RB;
+    this.selected = props.selected ?? true;
   }
 
-  updateAll(
-    coords: Point,
-    offset: Point = { x: 0, y: 0 },
-    position: string = Figure.POSITION.RB
-  ) {
-    if (position === Figure.POSITION.IN) {
-      return this.updatePosition(coords, offset);
+  isIntersected(coords: Point) {
+    return this.cursorPosition(coords) !== Figure.POSITION.OUT;
+  }
+
+  grab(coords: Point) {
+    const offset = { x: coords.x - this.x1, y: coords.y - this.y1 };
+    return this.clone({
+      ...this,
+      offset: offset,
+      position: this.cursorPosition(coords),
+      selected: true,
+    });
+  }
+
+  release() {
+    return this.clone({ ...this, ...this.orderCoords(), selected: false });
+  }
+
+  update(coords: Point) {
+    if (this.position === Figure.POSITION.IN) {
+      return this.move(coords, this.offset);
     } else {
-      return this.updateCoords(coords, position);
+      return this.resize(coords, this.position);
     }
   }
 
-  updatePosition(coords: Point, offset: Point = { x: 0, y: 0 }): Figure {
+  move(coords: Point, offset: Point = { x: 0, y: 0 }): Figure {
     const x1 = coords.x - offset.x;
     const y1 = coords.y - offset.y;
     const x2 = x1 + this.width();
@@ -50,7 +78,7 @@ export default abstract class Figure {
     return this.clone({ ...this, x1, y1, x2, y2 });
   }
 
-  updateCoords(coords: Point, position: string = Figure.POSITION.RB) {
+  resize(coords: Point, position: string = Figure.POSITION.RB) {
     const { x1, y1, x2, y2 } = this;
     let newPosition = { x1, y1, x2, y2 };
 
@@ -75,9 +103,8 @@ export default abstract class Figure {
     return this.clone({ ...this, ...newPosition });
   }
 
-  reAdjustCoords(): Figure {
-    const coords = this.orderCoords();
-    return this.clone({ ...this, ...coords });
+  readjust(): Figure {
+    return this.clone({ ...this, ...this.orderCoords() });
   }
 
   height(): number {

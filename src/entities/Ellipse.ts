@@ -1,13 +1,13 @@
 import { Drawable } from 'roughjs/bin/core';
 
-import Figure, { BasicFigure } from './Figure';
+import Figure, { FigureProps } from './Figure';
 import rough from 'roughjs';
 import Rectangle from './Rectangle';
 
 export default class Ellipse extends Rectangle {
   drawable: Drawable;
 
-  constructor(options: BasicFigure) {
+  constructor(options: FigureProps) {
     super(options);
     const { x1, y1 } = options;
     const width = this.width();

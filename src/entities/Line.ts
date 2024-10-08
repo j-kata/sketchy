@@ -1,12 +1,12 @@
 import { Drawable } from 'roughjs/bin/core';
-import Figure, { BasicFigure } from './Figure';
+import Figure, { FigureProps } from './Figure';
 import { Point, Position } from '../types';
 import rough from 'roughjs';
 
 export default class Line extends Figure {
   drawable: Drawable;
 
-  constructor(options: BasicFigure) {
+  constructor(options: FigureProps) {
     super(options);
     const { x1, y1, x2, y2 } = options;
     this.drawable = rough.generator().line(x1, y1, x2, y2);
