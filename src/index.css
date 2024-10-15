@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.panel-black {
+  background: #000;
+}
+.panel-red {
+  background: #f00;
+}
+.panel-green {
+  background: #0f0;
+}
+.panel-blue {
+  background: #00f;
+}
+.panel-magenta {
+  background: #f0f;
+}
+.panel-yellow {
+  background: #ff0;
+}
+.panel-cyan {
+  background: #0ff;
+}
+.panel-white {
+  background: #fff;
+}
+
+.panel-transparent {
+  background: transparent;
+}
