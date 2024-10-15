@@ -13,3 +13,10 @@ export type Cursor = {
   position?: string;
   offset?: Point;
 };
+
+export enum Tool {
+  SELECT = 'select',
+  LINE = 'line',
+  SQUARE = 'square',
+  ELLIPSE = 'ellipse',
+}
