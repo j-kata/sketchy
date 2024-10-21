@@ -1,32 +1,31 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { PanelItem } from './PanelItem';
 import { Background, Color } from './types';
+import {
+  setStrokeColor,
+  setBackgroundColor,
+  strokeColorSelector,
+  backgroundSelector,
+} from './redux/optionSlice';
 
-interface PanelInterface {
-  selectedStrokeColor: Color;
-  onStrokeColorClick: (color: Color) => void;
-  selectedBackgroundColor: Background;
-  onBackgroundColorClick: (background: Background) => void;
-}
+export default function Panel() {
+  const dispatch = useDispatch();
+  const strokeColor = useSelector(strokeColorSelector);
+  const backgroundColor = useSelector(backgroundSelector);
 
-export default function Panel({
-  selectedStrokeColor,
-  onStrokeColorClick,
-  selectedBackgroundColor,
-  onBackgroundColorClick,
-}: PanelInterface) {
   return (
     <div className='fixed left-4 top-1/2 -translate-y-1/2 p-2 space-y-5 border border-neutral-300 rounded-md shadow-md'>
       <PanelItem
         title='Color'
         values={Color}
-        selected={selectedStrokeColor}
-        onClick={onStrokeColorClick}
+        selected={strokeColor}
+        onClick={(color: Color) => dispatch(setStrokeColor(color))}
       />
       <PanelItem
         title='Background'
         values={Background}
-        selected={selectedBackgroundColor}
-        onClick={onBackgroundColorClick}
+        selected={backgroundColor}
+        onClick={(color: Background) => dispatch(setBackgroundColor(color))}
       />
     </div>
   );
