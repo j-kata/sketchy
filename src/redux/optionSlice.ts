@@ -1,15 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Background, Color } from '../types';
+import { Background, Color, Width, Style } from '../types';
 import { RootState } from './store';
 
 type State = {
-  strokeColor: Color;
-  backgroundColor: Background;
+  stroke: Color;
+  fill: Background;
+  strokeWidth: Width;
+  fillStyle: Style;
 };
 
 const initialState: State = {
-  strokeColor: Color.BLACK,
-  backgroundColor: Background.TRANSPARENT,
+  stroke: Color.BLACK,
+  fill: Background.TRANSPARENT,
+  strokeWidth: Width.XS,
+  fillStyle: Style.SOLID,
 };
 
 export const optionSlice = createSlice({
@@ -17,19 +21,31 @@ export const optionSlice = createSlice({
   initialState,
   reducers: {
     setStrokeColor: (state, action: PayloadAction<Color>) => {
-      state.strokeColor = action.payload;
+      state.stroke = action.payload;
     },
     setBackgroundColor: (state, action: PayloadAction<Background>) => {
-      state.backgroundColor = action.payload;
+      state.fill = action.payload;
+    },
+    setStrokeWidth: (state, action: PayloadAction<Width>) => {
+      state.strokeWidth = action.payload;
+    },
+    setFillStyle: (state, action: PayloadAction<Style>) => {
+      state.fillStyle = action.payload;
     },
   },
 });
 
-export const strokeColorSelector = (state: RootState) =>
-  state.options.strokeColor;
-export const backgroundSelector = (state: RootState) =>
-  state.options.backgroundColor;
+export const strokeColorSelector = (state: RootState) => state.options.stroke;
+export const backgroundSelector = (state: RootState) => state.options.fill;
+export const strokeWidthSelector = (state: RootState) =>
+  state.options.strokeWidth;
+export const fillStyleSelector = (state: RootState) => state.options.fillStyle;
 
-export const { setStrokeColor, setBackgroundColor } = optionSlice.actions;
+export const {
+  setStrokeColor,
+  setBackgroundColor,
+  setStrokeWidth,
+  setFillStyle,
+} = optionSlice.actions;
 
 export default optionSlice.reducer;

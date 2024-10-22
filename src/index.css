@@ -2,31 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
-.panel-black {
-  background: #000;
+.panel-color-black,
+.panel-background-black {
+  @apply bg-black;
 }
-.panel-red {
-  background: #f00;
+.panel-color-red,
+.panel-background-red {
+  @apply bg-red-600;
 }
-.panel-green {
-  background: #0f0;
+.panel-color-green,
+.panel-background-green {
+  @apply bg-green-600;
 }
-.panel-blue {
-  background: #00f;
+.panel-color-blue,
+.panel-background-blue {
+  @apply bg-blue-600;
 }
-.panel-magenta {
-  background: #f0f;
+.panel-color-magenta,
+.panel-background-magenta {
+  @apply bg-fuchsia-600;
 }
-.panel-yellow {
-  background: #ff0;
+.panel-color-yellow,
+.panel-background-yellow {
+  @apply bg-yellow-600;
 }
-.panel-cyan {
-  background: #0ff;
+.panel-color-cyan,
+.panel-background-cyan {
+  @apply bg-cyan-600;
 }
-.panel-white {
-  background: #fff;
+.panel-color-white,
+.panel-background-white {
+  @apply bg-white;
 }
 
-.panel-transparent {
-  background: transparent;
+.panel-color-transparent,
+.panel-background-transparent {
+  @apply bg-[repeating-linear-gradient(45deg,#ccc_25%,transparent_25%,transparent_75%,#ccc_75%,#ccc),repeating-linear-gradient(45deg,#ccc_25%,transparent_25%,transparent_75%,#ccc_75%,#ccc)] bg-[size:22px,22px] bg-[position:0px_0px,11px_11px];
+}
+
+.panel-stroke-width-xs {
+  @apply after:block after:w-5/6 after:h-px after:bg-black;
+}
+
+.panel-stroke-width-sm {
+  @apply after:block after:w-5/6 after:h-0.5 after:bg-black;
+}
+
+.panel-stroke-width-md {
+  @apply after:block after:w-5/6 after:h-[3px] after:bg-black;
+}
+
+.panel-stroke-width-lg {
+  @apply after:block after:w-5/6 after:h-1 after:bg-black;
+}
+
+.panel-stroke-width-xl {
+  @apply after:block after:w-5/6 after:h-[5px] after:bg-black;
+}
+
+.panel-style-solid {
+  @apply p-0.5 bg-black bg-clip-content;
+}
+
+.panel-style-zigzag {
+  @apply p-0.5 bg-clip-content bg-[repeating-linear-gradient(45deg,#000,#000_2px,transparent_2px,transparent_5px)];
+}
+
+.panel-style-cross {
+  @apply p-0.5 bg-clip-content bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] [background-size:4px_4px];
+}
+
+.panel-style-dots {
+  @apply p-0.5 bg-clip-content bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:7px_7px];
 }

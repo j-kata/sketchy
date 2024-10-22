@@ -13,7 +13,7 @@ export function createElement(
   const id = nextIndex(elements);
 
   switch (type) {
-    case 'rectangle': {
+    case 'square': {
       return new Rectangle({ id, x1, y1, x2, y2 });
     }
     case 'ellipse': {

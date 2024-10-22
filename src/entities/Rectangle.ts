@@ -1,7 +1,8 @@
-import { Drawable } from 'roughjs/bin/core';
-import Figure, { FigureProps } from './Figure';
+import { Drawable, Options } from 'roughjs/bin/core';
+import Figure, { FigureOptions, FigureProps } from './Figure';
 import { Point, Position } from '../types';
 import rough from 'roughjs';
+import { RoughCanvas } from 'roughjs/bin/canvas';
 
 export default class Rectangle extends Figure {
   drawable: Drawable;
@@ -49,5 +50,15 @@ export default class Rectangle extends Figure {
     const minY = Math.min(this.y1, this.y2);
     const maxY = Math.max(this.y1, this.y2);
     return { minX, minY, maxX, maxY };
+  }
+
+  draw(canvas: RoughCanvas, options: FigureOptions = {}) {
+    canvas.rectangle(
+      this.x1,
+      this.y1,
+      this.width(),
+      this.height(),
+      options as Options
+    );
   }
 }

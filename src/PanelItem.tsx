@@ -11,11 +11,12 @@ export function PanelItem<T>({
   selected,
   onClick,
 }: PanelItemInterface<T>) {
-  const classes = 'w-6 h-6 rounded border border-neutral-200';
+  const classes =
+    'flex justify-center items-center w-6 h-6 rounded border border-neutral-200';
 
   return (
     <div>
-      <h1 className='text-sm font-semibold'>{title}</h1>
+      <h1 className='mb-2 text-sm font-semibold'>{title}</h1>
       <div className='flex items-center space-x-1'>
         {Object.entries(values).map(([key, value]) => (
           <button
@@ -23,7 +24,9 @@ export function PanelItem<T>({
             onClick={() => onClick(value)}
             className={
               classes +
-              ` panel-${key.toLowerCase()} ${
+              ` panel-${title
+                .toLowerCase()
+                .replace(' ', '-')}-${key.toLowerCase()} ${
                 value === selected ? 'outline outline-neutral-500' : ''
               }`
             }

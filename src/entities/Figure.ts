@@ -1,5 +1,6 @@
 import { Drawable } from 'roughjs/bin/core';
-import { Point, Position } from '../types';
+import { Background, Color, Point, Position, Style, Width } from '../types';
+import { RoughCanvas } from 'roughjs/bin/canvas';
 
 export type FigureProps = {
   id: number;
@@ -11,7 +12,12 @@ export type FigureProps = {
   position?: string;
   selected?: boolean;
 };
-
+export interface FigureOptions {
+  stroke?: Color;
+  strokeWidth?: Width;
+  fill?: Background;
+  fillStyle?: Style;
+}
 export default abstract class Figure {
   id: number;
   x1: number;
@@ -121,6 +127,7 @@ export default abstract class Figure {
     );
   }
 
+  abstract draw(canvas: RoughCanvas, options?: FigureOptions): void;
   abstract clone(figure?: Figure): Figure;
   abstract isWithinElement(coords: Point): boolean;
   abstract cursorPosition(coords: Point): string;

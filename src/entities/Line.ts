@@ -1,7 +1,8 @@
-import { Drawable } from 'roughjs/bin/core';
-import Figure, { FigureProps } from './Figure';
+import { Drawable, Options } from 'roughjs/bin/core';
+import Figure, { FigureOptions, FigureProps } from './Figure';
 import { Point, Position } from '../types';
 import rough from 'roughjs';
+import { RoughCanvas } from 'roughjs/bin/canvas';
 
 export default class Line extends Figure {
   drawable: Drawable;
@@ -49,5 +50,9 @@ export default class Line extends Figure {
 
   private distance(a: Point, b: Point): number {
     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+  }
+
+  draw(canvas: RoughCanvas, options: FigureOptions = {}) {
+    canvas.line(this.x1, this.y1, this.x2, this.y2, options as Options);
   }
 }

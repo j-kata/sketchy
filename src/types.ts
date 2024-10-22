@@ -43,3 +43,19 @@ export enum Background {
   CYAN = '#0FF',
   WHITE = '#FFF',
 }
+
+export enum Width {
+  XS = '1',
+  SM = '2',
+  MD = '3',
+  LG = '4',
+  XL = '5',
+}
+
+export enum Style {
+  SOLID = 'solid',
+  ZIGZAG = 'zigzag',
+  CROSS = 'cross-hatch',
+  DOTS = 'dots',
+  DASHED = 'dashed',
+}

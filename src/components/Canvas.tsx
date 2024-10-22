@@ -2,6 +2,9 @@ import { useLayoutEffect, useReducer, useRef } from 'react';
 import rough from 'roughjs';
 import reducer from '../utils/canvasReducer';
 import { cursorStyle, getElementPosition } from '../utils/canvasUtils';
+import { useSelector } from 'react-redux';
+import { FigureOptions } from '../entities/Figure';
+import { RootState } from '../redux/store';
 
 export default function Canvas({
   width,
@@ -12,6 +15,8 @@ export default function Canvas({
   height: number;
   tool: string;
 }) {
+  const options = useSelector((state: RootState) => state.options);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [{ history, currentStep }, dispatch] = useReducer(reducer, {
     history: [[]],
@@ -26,8 +31,8 @@ export default function Canvas({
     ctx?.clearRect(0, 0, canvas.width, canvas.height);
     const roughCanvas = rough.canvas(canvas);
 
-    elements.forEach(({ drawable }) => {
-      roughCanvas.draw(drawable);
+    elements.forEach((element) => {
+      element.draw(roughCanvas, options as FigureOptions);
     });
   });
 
