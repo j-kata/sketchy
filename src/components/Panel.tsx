@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { PanelItem } from './PanelItem';
-import { Background, Color, Width, Style } from './types';
+import { Background, Color, Width, Style } from '../types';
 import {
   setStrokeColor,
   setBackgroundColor,
@@ -10,7 +10,7 @@ import {
   backgroundSelector,
   strokeWidthSelector,
   fillStyleSelector,
-} from './redux/optionSlice';
+} from '../redux/optionSlice';
 
 export default function Panel() {
   const dispatch = useDispatch();

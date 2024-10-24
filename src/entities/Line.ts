@@ -1,19 +1,10 @@
-import { Drawable, Options } from 'roughjs/bin/core';
-import Figure, { FigureOptions, FigureProps } from './Figure';
+import { Options } from 'roughjs/bin/core';
+import Figure, { FigureOptions } from './Figure';
 import { Point, Position } from '../types';
-import rough from 'roughjs';
 import { RoughCanvas } from 'roughjs/bin/canvas';
 
 export default class Line extends Figure {
-  drawable: Drawable;
-
-  constructor(options: FigureProps) {
-    super(options);
-    const { x1, y1, x2, y2 } = options;
-    this.drawable = rough.generator().line(x1, y1, x2, y2);
-  }
-
-  clone(figure: Figure = this) {
+  clone(figure: Line = this) {
     return new Line(figure);
   }
 

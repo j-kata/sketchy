@@ -1,6 +1,6 @@
-import { Drawable } from 'roughjs/bin/core';
 import { Background, Color, Point, Position, Style, Width } from '../types';
 import { RoughCanvas } from 'roughjs/bin/canvas';
+import { Options } from 'roughjs/bin/core';
 
 export type FigureProps = {
   id: number;
@@ -11,6 +11,7 @@ export type FigureProps = {
   offset?: Point;
   position?: string;
   selected?: boolean;
+  options?: object;
 };
 export interface FigureOptions {
   stroke?: Color;
@@ -27,8 +28,7 @@ export default abstract class Figure {
   offset: Point;
   position: string;
   selected: boolean;
-
-  abstract drawable: Drawable;
+  options: object;
 
   static POSITION = {
     LT: 'LEFT_TOP',
@@ -48,10 +48,7 @@ export default abstract class Figure {
     this.offset = props.offset ?? { x: 0, y: 0 };
     this.position = props.position ?? Figure.POSITION.RB;
     this.selected = props.selected ?? true;
-  }
-
-  isIntersected(coords: Point) {
-    return this.cursorPosition(coords) !== Figure.POSITION.OUT;
+    this.options = props.options ?? {};
   }
 
   grab(coords: Point) {
@@ -111,6 +108,10 @@ export default abstract class Figure {
 
   readjust(): Figure {
     return this.clone({ ...this, ...this.orderCoords() });
+  }
+
+  isIntersected(coords: Point) {
+    return this.cursorPosition(coords) !== Figure.POSITION.OUT;
   }
 
   height(): number {

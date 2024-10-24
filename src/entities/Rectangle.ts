@@ -1,19 +1,10 @@
-import { Drawable, Options } from 'roughjs/bin/core';
-import Figure, { FigureOptions, FigureProps } from './Figure';
+import { Options } from 'roughjs/bin/core';
+import Figure, { FigureOptions } from './Figure';
 import { Point, Position } from '../types';
-import rough from 'roughjs';
 import { RoughCanvas } from 'roughjs/bin/canvas';
 
 export default class Rectangle extends Figure {
-  drawable: Drawable;
-
-  constructor(options: FigureProps) {
-    super(options);
-    const { x1, x2, y1, y2 } = options;
-    this.drawable = rough.generator().rectangle(x1, y1, x2 - x1, y2 - y1);
-  }
-
-  clone(figure: Figure = this) {
+  clone(figure: Rectangle = this) {
     return new Rectangle(figure);
   }
 

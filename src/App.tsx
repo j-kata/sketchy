@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Provider } from 'react-redux';
 import Canvas from './components/Canvas';
-import Tools from './Tools';
+import Tools from './components/Tools';
 import { Tool } from './types';
-import Panel from './Panel';
+import Panel from './components/Panel';
 import { store } from './redux/store';
 
 function App() {

@@ -1,5 +1,5 @@
 import { ToolItem } from './ToolItem';
-import { Tool } from './types';
+import { Tool } from '../types';
 
 interface ToolsProps {
   selected: Tool | null;

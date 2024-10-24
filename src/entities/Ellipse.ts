@@ -1,24 +1,10 @@
-import { Drawable, Options } from 'roughjs/bin/core';
-
-import Figure, { FigureOptions, FigureProps } from './Figure';
-import rough from 'roughjs';
+import { Options } from 'roughjs/bin/core';
+import { FigureOptions } from './Figure';
 import Rectangle from './Rectangle';
 import { RoughCanvas } from 'roughjs/bin/canvas';
 
 export default class Ellipse extends Rectangle {
-  drawable: Drawable;
-
-  constructor(options: FigureProps) {
-    super(options);
-    const { x1, y1 } = options;
-    const width = this.width();
-    const height = this.height();
-    const centerX = x1 + width / 2;
-    const centerY = y1 + height / 2;
-    this.drawable = rough.generator().ellipse(centerX, centerY, width, height);
-  }
-
-  clone(figure: Figure = this) {
+  clone(figure: Ellipse = this) {
     return new Ellipse(figure);
   }
 
