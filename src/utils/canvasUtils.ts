@@ -2,7 +2,7 @@ import Figure from '../entities/Figure';
 import Rectangle from '../entities/Rectangle';
 import Line from '../entities/Line';
 import Ellipse from '../entities/Ellipse';
-import { Point } from '../types';
+import { Point, Tool } from '../types';
 
 export function createElement(
   elements: Figure[],
@@ -13,10 +13,10 @@ export function createElement(
   const id = nextIndex(elements);
 
   switch (type) {
-    case 'square': {
+    case Tool.SQUARE: {
       return new Rectangle({ id, x1, y1, x2, y2 });
     }
-    case 'ellipse': {
+    case Tool.ELLIPSE: {
       return new Ellipse({ id, x1, y1, x2, y2 });
     }
     default: {

@@ -3,19 +3,18 @@ import rough from 'roughjs';
 import reducer from '../utils/canvasReducer';
 import { cursorStyle, getElementPosition } from '../utils/canvasUtils';
 import { useSelector } from 'react-redux';
-import { FigureOptions } from '../entities/Figure';
 import { RootState } from '../redux/store';
+import { Tool } from '../types';
+import { Options } from 'roughjs/bin/core';
 
-export default function Canvas({
-  width,
-  height,
-  tool,
-}: {
+interface CanvasProps {
   width: number;
   height: number;
-  tool: string;
-}) {
-  const options = useSelector((state: RootState) => state.options);
+}
+
+export default function Canvas({ width, height }: CanvasProps) {
+  const options: unknown = useSelector((state: RootState) => state.options);
+  const tool = useSelector((state: RootState) => state.tool.tool);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [{ history, currentStep }, dispatch] = useReducer(reducer, {
@@ -32,14 +31,14 @@ export default function Canvas({
     const roughCanvas = rough.canvas(canvas);
 
     elements.forEach((element) => {
-      element.draw(roughCanvas, options as FigureOptions);
+      element.draw(roughCanvas, options as Options);
     });
-  });
+  }, [elements, currentStep, options]);
 
   function handleMouseDown(event: React.MouseEvent): void {
     const { clientX: x, clientY: y } = event;
     switch (tool) {
-      case 'selection': {
+      case Tool.SELECT: {
         dispatch({ type: 'grab', x, y });
         break;
       }
@@ -53,7 +52,7 @@ export default function Canvas({
   function handleMouseMove(event: React.MouseEvent): void {
     const { clientX: x, clientY: y } = event;
 
-    if (tool === 'selection' && event.buttons === 0) {
+    if (tool === Tool.SELECT && event.buttons === 0) {
       const target = event.target as HTMLElement;
       const position = getElementPosition(elements, { x, y });
       target.style.cursor = cursorStyle(position);

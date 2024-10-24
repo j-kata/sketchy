@@ -1,5 +1,5 @@
 import { Options } from 'roughjs/bin/core';
-import Figure, { FigureOptions } from './Figure';
+import Figure from './Figure';
 import { Point, Position } from '../types';
 import { RoughCanvas } from 'roughjs/bin/canvas';
 
@@ -43,13 +43,7 @@ export default class Rectangle extends Figure {
     return { minX, minY, maxX, maxY };
   }
 
-  draw(canvas: RoughCanvas, options: FigureOptions = {}) {
-    canvas.rectangle(
-      this.x1,
-      this.y1,
-      this.width(),
-      this.height(),
-      options as Options
-    );
+  draw(canvas: RoughCanvas, options: Options = {}) {
+    canvas.rectangle(this.x1, this.y1, this.width(), this.height(), options);
   }
 }

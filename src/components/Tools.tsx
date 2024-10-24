@@ -1,12 +1,13 @@
 import { ToolItem } from './ToolItem';
 import { Tool } from '../types';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { setTool } from '../redux/toolSlice';
 
-interface ToolsProps {
-  selected: Tool | null;
-  onClick: (tool: Tool) => void;
-}
+export default function Tools() {
+  const selected = useSelector((state: RootState) => state.tool.tool);
+  const dispatch = useDispatch();
 
-export default function Tools({ selected, onClick }: ToolsProps) {
   return (
     <div className='fixed top-4 left-1/2 -translate-x-1/2 flex items-center p-2 space-x-4 border border-neutral-200 rounded-md shadow-md'>
       {Object.values(Tool).map((value) => (
@@ -15,7 +16,7 @@ export default function Tools({ selected, onClick }: ToolsProps) {
           src={`/src/assets/${value}.svg`}
           alt={value}
           selected={selected == value}
-          onClick={() => onClick(value)}
+          onClick={() => dispatch(setTool(value))}
         />
       ))}
     </div>
