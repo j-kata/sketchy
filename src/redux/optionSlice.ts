@@ -1,15 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Background, Color, Width, Style } from '../types';
+import { Background, Color, Width, Style, Options } from '../types';
 import { RootState } from './store';
 
-type State = {
-  stroke: Color;
-  fill: Background;
-  strokeWidth: Width;
-  fillStyle: Style;
-};
-
-const initialState: State = {
+const initialState: Options = {
   stroke: Color.BLACK,
   fill: Background.TRANSPARENT,
   strokeWidth: Width.XS,

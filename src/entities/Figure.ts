@@ -1,6 +1,7 @@
-import { Point, Position } from '../types';
+import { Drawable } from 'roughjs/bin/core';
+import { Options, Point, Position } from '../types';
 import { RoughCanvas } from 'roughjs/bin/canvas';
-import { Options } from 'roughjs/bin/core';
+// import { RoughCanvas } from 'roughjs/bin/canvas';
 
 export type FigureProps = {
   id: number;
@@ -11,7 +12,7 @@ export type FigureProps = {
   offset?: Point;
   position?: string;
   selected?: boolean;
-  options?: object;
+  options?: Options;
 };
 export default abstract class Figure {
   id: number;
@@ -22,7 +23,8 @@ export default abstract class Figure {
   offset: Point;
   position: string;
   selected: boolean;
-  options: object;
+  options: Options;
+  drawable: Drawable | null;
 
   static POSITION = {
     LT: 'LEFT_TOP',
@@ -42,7 +44,10 @@ export default abstract class Figure {
     this.offset = props.offset ?? { x: 0, y: 0 };
     this.position = props.position ?? Figure.POSITION.RB;
     this.selected = props.selected ?? true;
-    this.options = props.options ?? {};
+    this.options = props.options || {};
+    if (!this.options.seed)
+      this.options = { ...this.options, seed: 1 + Math.random() * 200 };
+    this.drawable = null;
   }
 
   grab(coords: Point) {
@@ -122,7 +127,7 @@ export default abstract class Figure {
     );
   }
 
-  abstract draw(canvas: RoughCanvas, options?: Options): void;
+  abstract draw(canvas: RoughCanvas): void;
   abstract clone(figure?: Figure): Figure;
   abstract isWithinElement(coords: Point): boolean;
   abstract cursorPosition(coords: Point): string;

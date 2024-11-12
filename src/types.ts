@@ -14,6 +14,14 @@ export type Cursor = {
   offset?: Point;
 };
 
+export type Options = {
+  stroke?: Color;
+  fill?: Background;
+  strokeWidth?: Width;
+  fillStyle?: Style;
+  seed?: number;
+};
+
 export enum Tool {
   SELECT = 'select',
   LINE = 'line',
@@ -45,12 +53,14 @@ export enum Background {
 }
 
 export enum Width {
-  XS = '1',
-  SM = '2',
-  MD = '3',
-  LG = '4',
-  XL = '5',
+  XS = 1,
+  SM = 2,
+  MD = 3,
+  LG = 4,
+  XL = 5,
 }
+
+export type WidthValues = `${Width}`;
 
 export enum Style {
   SOLID = 'solid',

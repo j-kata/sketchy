@@ -1,4 +1,5 @@
 import Figure from '../entities/Figure';
+import { Options, Tool } from '../types';
 
 import {
   replaceElement,
@@ -11,9 +12,10 @@ import {
 type Action =
   | {
       type: 'draw';
-      tool: string;
+      tool: Tool;
       x: number;
       y: number;
+      options: Options;
     }
   | {
       type: 'move' | 'grab';
@@ -35,7 +37,12 @@ export default function figureReducer(state: State, action: Action): State {
 
   switch (action.type) {
     case 'draw': {
-      const element = createElement(elements, action.tool, action);
+      const element = createElement(
+        elements,
+        action.tool,
+        action,
+        action.options
+      );
       elements = [...elements, element];
       history = replaceHistory(history, elements, currentStep + 1);
       currentStep++;

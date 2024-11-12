@@ -2,25 +2,26 @@ import Figure from '../entities/Figure';
 import Rectangle from '../entities/Rectangle';
 import Line from '../entities/Line';
 import Ellipse from '../entities/Ellipse';
-import { Point, Tool } from '../types';
+import { Options, Point, Tool } from '../types';
 
 export function createElement(
   elements: Figure[],
   type: string,
-  { x, y }: Point
+  { x, y }: Point,
+  options: Options
 ) {
   const [x1, y1, x2, y2] = [x, y, x, y];
   const id = nextIndex(elements);
 
   switch (type) {
     case Tool.SQUARE: {
-      return new Rectangle({ id, x1, y1, x2, y2 });
+      return new Rectangle({ id, x1, y1, x2, y2, options });
     }
     case Tool.ELLIPSE: {
-      return new Ellipse({ id, x1, y1, x2, y2 });
+      return new Ellipse({ id, x1, y1, x2, y2, options });
     }
     default: {
-      return new Line({ id, x1, y1, x2, y2 });
+      return new Line({ id, x1, y1, x2, y2, options });
     }
   }
 }

@@ -1,8 +1,6 @@
-import { Options } from 'roughjs/bin/core';
 import Figure from './Figure';
 import { Point, Position } from '../types';
 import { RoughCanvas } from 'roughjs/bin/canvas';
-
 export default class Line extends Figure {
   clone(figure: Line = this) {
     return new Line(figure);
@@ -43,7 +41,17 @@ export default class Line extends Figure {
     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
   }
 
-  draw(canvas: RoughCanvas, options: Options = {}) {
-    canvas.line(this.x1, this.y1, this.x2, this.y2, options);
+  draw(canvas: RoughCanvas) {
+    if (!this.drawable) {
+      this.drawable = canvas.line(
+        this.x1,
+        this.y1,
+        this.x2,
+        this.y2,
+        this.options
+      );
+    } else {
+      canvas.draw(this.drawable);
+    }
   }
 }

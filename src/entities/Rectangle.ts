@@ -1,8 +1,6 @@
-import { Options } from 'roughjs/bin/core';
 import Figure from './Figure';
 import { Point, Position } from '../types';
 import { RoughCanvas } from 'roughjs/bin/canvas';
-
 export default class Rectangle extends Figure {
   clone(figure: Rectangle = this) {
     return new Rectangle(figure);
@@ -43,7 +41,17 @@ export default class Rectangle extends Figure {
     return { minX, minY, maxX, maxY };
   }
 
-  draw(canvas: RoughCanvas, options: Options = {}) {
-    canvas.rectangle(this.x1, this.y1, this.width(), this.height(), options);
+  draw(canvas: RoughCanvas) {
+    if (!this.drawable) {
+      this.drawable = canvas.rectangle(
+        this.x1,
+        this.y1,
+        this.width(),
+        this.height(),
+        this.options
+      );
+    } else {
+      canvas.draw(this.drawable);
+    }
   }
 }

@@ -5,7 +5,6 @@ import { cursorStyle, getElementPosition } from '../utils/canvasUtils';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { Tool } from '../types';
-import { Options } from 'roughjs/bin/core';
 
 interface CanvasProps {
   width: number;
@@ -13,7 +12,7 @@ interface CanvasProps {
 }
 
 export default function Canvas({ width, height }: CanvasProps) {
-  const options: unknown = useSelector((state: RootState) => state.options);
+  const options = useSelector((state: RootState) => state.options);
   const tool = useSelector((state: RootState) => state.tool.tool);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -26,12 +25,13 @@ export default function Canvas({ width, height }: CanvasProps) {
 
   useLayoutEffect(() => {
     const canvas = canvasRef.current as HTMLCanvasElement;
+
     const ctx = canvas.getContext('2d');
     ctx?.clearRect(0, 0, canvas.width, canvas.height);
     const roughCanvas = rough.canvas(canvas);
 
     elements.forEach((element) => {
-      element.draw(roughCanvas, options as Options);
+      element.draw(roughCanvas);
     });
   }, [elements, currentStep, options]);
 
@@ -43,7 +43,7 @@ export default function Canvas({ width, height }: CanvasProps) {
         break;
       }
       default: {
-        dispatch({ type: 'draw', x, y, tool: tool });
+        dispatch({ type: 'draw', x, y, tool: tool, options: options });
         break;
       }
     }
