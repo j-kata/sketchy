@@ -13,7 +13,12 @@ export function ToolItem({ src, alt, selected, onClick }: ToolItemProps) {
     : defaultClasses;
 
   return (
-    <button type='button' className={classes} onClick={onClick}>
+    <button
+      type='button'
+      className={classes}
+      onClick={onClick}
+      data-testid={`button-tool-${alt}`}
+    >
       <img src={src} alt={alt} />
     </button>
   );
