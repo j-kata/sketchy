@@ -1,22 +1,23 @@
 import { ToolItem } from './ToolItem';
 import { Tool } from '../types';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { setTool } from '../redux/toolSlice';
+import { useContext } from 'react';
+import { ToolsContext, ToolsContextType } from '../context/ToolsContext';
 
 export default function Tools() {
-  const selected = useSelector((state: RootState) => state.tool.tool);
-  const dispatch = useDispatch();
+  const { tool, setTool } = useContext(ToolsContext) as ToolsContextType;
+
+  const defaultClasses =
+    'fixed top-4 left-1/2 -translate-x-1/2 flex items-center py-2 px-4 space-x-3 border border-neutral-200 rounded-md shadow-md';
 
   return (
-    <div className='fixed top-4 left-1/2 -translate-x-1/2 flex items-center p-2 space-x-4 border border-neutral-200 rounded-md shadow-md'>
+    <div className={defaultClasses}>
       {Object.values(Tool).map((value) => (
         <ToolItem
           key={value}
           src={`/src/assets/${value}.svg`}
           alt={value}
-          selected={selected == value}
-          onClick={() => dispatch(setTool(value))}
+          selected={tool == value}
+          onClick={() => setTool(value)}
         />
       ))}
     </div>

@@ -1,10 +1,11 @@
-import { useLayoutEffect, useReducer, useRef } from 'react';
+import { useContext, useLayoutEffect, useReducer, useRef } from 'react';
 import rough from 'roughjs';
 import reducer from '../utils/canvasReducer';
 import { cursorStyle, getElementPosition } from '../utils/canvasUtils';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { Tool } from '../types';
+import { ToolsContext, ToolsContextType } from '../context/ToolsContext';
 
 interface CanvasProps {
   width: number;
@@ -13,7 +14,7 @@ interface CanvasProps {
 
 export default function Canvas({ width, height }: CanvasProps) {
   const options = useSelector((state: RootState) => state.options);
-  const tool = useSelector((state: RootState) => state.tool.tool);
+  const { tool } = useContext(ToolsContext) as ToolsContextType;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [{ history, currentStep }, dispatch] = useReducer(reducer, {

@@ -6,9 +6,11 @@ interface ToolItemProps {
 }
 
 export function ToolItem({ src, alt, selected, onClick }: ToolItemProps) {
-  let classes =
-    'flex justify-center items-center w-10 h-10 p-2 rounded-md cursor-pointer hover:bg-lime-600/10';
-  if (selected) classes += ' bg-lime-600/20';
+  const defaultClasses =
+    'flex justify-center items-center w-9 h-9 p-2 rounded-md cursor-pointer hover:bg-lime-600/10';
+  const classes = selected
+    ? `${defaultClasses} bg-lime-600/20`
+    : defaultClasses;
 
   return (
     <button type='button' className={classes} onClick={onClick}>
