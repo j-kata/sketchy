@@ -1,20 +1,18 @@
-import { Provider } from 'react-redux';
 import Canvas from './components/Canvas';
-import Tools from './components/Tools';
-import Panel from './components/Panel';
-import { store } from './redux/store';
+import ToolPanel from './components/ToolPanel';
+import OptionPanel from './components/OptionPanel';
 import { ToolsProvider } from './context/ToolsContext';
+import { OptionsProvider } from './context/OptionsContext';
 
 function App() {
   return (
     <div className='w-screen h-screen'>
       <ToolsProvider>
-        <Provider store={store}>
-          <Tools />
-          <Panel />
-
+        <OptionsProvider>
+          <ToolPanel />
+          <OptionPanel />
           <Canvas width={window.innerWidth} height={window.innerHeight} />
-        </Provider>
+        </OptionsProvider>
       </ToolsProvider>
     </div>
   );

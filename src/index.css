@@ -2,76 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
-.panel-color-black,
-.panel-background-black {
+.option-color-black,
+.option-background-black {
   @apply bg-black;
 }
-.panel-color-red,
-.panel-background-red {
+.option-color-red,
+.option-background-red {
   @apply bg-red-600;
 }
-.panel-color-green,
-.panel-background-green {
+.option-color-green,
+.option-background-green {
   @apply bg-green-600;
 }
-.panel-color-blue,
-.panel-background-blue {
+.option-color-blue,
+.option-background-blue {
   @apply bg-blue-600;
 }
-.panel-color-magenta,
-.panel-background-magenta {
+.option-color-magenta,
+.option-background-magenta {
   @apply bg-fuchsia-600;
 }
-.panel-color-yellow,
-.panel-background-yellow {
+.option-color-yellow,
+.option-background-yellow {
   @apply bg-yellow-600;
 }
-.panel-color-cyan,
-.panel-background-cyan {
+.option-color-cyan,
+.option-background-cyan {
   @apply bg-cyan-600;
 }
-.panel-color-white,
-.panel-background-white {
+.option-color-white,
+.option-background-white {
   @apply bg-white;
 }
 
-.panel-color-transparent,
-.panel-background-transparent {
+.option-color-transparent,
+.option-background-transparent {
   @apply bg-[repeating-linear-gradient(45deg,#ccc_25%,transparent_25%,transparent_75%,#ccc_75%,#ccc),repeating-linear-gradient(45deg,#ccc_25%,transparent_25%,transparent_75%,#ccc_75%,#ccc)] bg-[size:22px,22px] bg-[position:0px_0px,11px_11px];
 }
 
-.panel-stroke-width-xs {
+.option-stroke-width-xs {
   @apply after:block after:w-5/6 after:h-px after:bg-black;
 }
 
-.panel-stroke-width-sm {
+.option-stroke-width-sm {
   @apply after:block after:w-5/6 after:h-0.5 after:bg-black;
 }
 
-.panel-stroke-width-md {
+.option-stroke-width-md {
   @apply after:block after:w-5/6 after:h-[3px] after:bg-black;
 }
 
-.panel-stroke-width-lg {
+.option-stroke-width-lg {
   @apply after:block after:w-5/6 after:h-1 after:bg-black;
 }
 
-.panel-stroke-width-xl {
+.option-stroke-width-xl {
   @apply after:block after:w-5/6 after:h-[5px] after:bg-black;
 }
 
-.panel-style-solid {
+.option-style-solid {
   @apply p-0.5 bg-black bg-clip-content;
 }
 
-.panel-style-zigzag {
+.option-style-zigzag {
   @apply p-0.5 bg-clip-content bg-[repeating-linear-gradient(45deg,#000,#000_2px,transparent_2px,transparent_5px)];
 }
 
-.panel-style-cross {
+.option-style-cross {
   @apply p-0.5 bg-clip-content bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] [background-size:4px_4px];
 }
 
-.panel-style-dots {
+.option-style-dots {
   @apply p-0.5 bg-clip-content bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:7px_7px];
 }

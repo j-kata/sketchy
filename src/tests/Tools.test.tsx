@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
 import '@testing-library/jest-dom';
-import Tools from '../components/Tools';
+import Tools from '../components/ToolPanel';
 import { Tool } from '../types';
 import { ToolsProvider } from '../context/ToolsContext';
 

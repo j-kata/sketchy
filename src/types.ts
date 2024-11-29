@@ -31,13 +31,10 @@ export enum Tool {
 
 export enum Color {
   BLACK = '#000',
+  WHITE = '#FFF',
   RED = '#F00',
   GREEN = '#0F0',
   BLUE = '#00F',
-  YELLOW = '#FF0',
-  MAGENTA = '#F0F',
-  CYAN = '#0FF',
-  WHITE = '#FFF',
 }
 
 export enum Background {
@@ -46,18 +43,14 @@ export enum Background {
   RED = '#F00',
   GREEN = '#0F0',
   BLUE = '#00F',
-  YELLOW = '#FF0',
-  MAGENTA = '#F0F',
-  CYAN = '#0FF',
-  WHITE = '#FFF',
 }
 
 export enum Width {
-  XS = 1,
-  SM = 2,
-  MD = 3,
-  LG = 4,
-  XL = 5,
+  XS = '1',
+  SM = '2',
+  MD = '3',
+  LG = '4',
+  XL = '5',
 }
 
 export type WidthValues = `${Width}`;
@@ -69,3 +62,11 @@ export enum Style {
   DOTS = 'dots',
   DASHED = 'dashed',
 }
+
+export type SupportedOptionEnum =
+  | typeof Color
+  | typeof Background
+  | typeof Width
+  | typeof Style;
+
+export type SupportedOption = Color | Background | Width | Style;

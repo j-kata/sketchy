@@ -3,7 +3,7 @@ import { Tool } from '../types';
 import { useContext } from 'react';
 import { ToolsContext, ToolsContextType } from '../context/ToolsContext';
 
-export default function Tools() {
+export default function ToolPanel() {
   const { tool, setTool } = useContext(ToolsContext) as ToolsContextType;
 
   const defaultClasses =
