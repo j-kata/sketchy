@@ -20,7 +20,7 @@ export default function OptionsPanel() {
 
   const evalClasses = () => {
     const defaultClasses =
-      'fixed left-4 top-1/2 -translate-y-1/2 px-2 py-4 border border-neutral-300 rounded-md shadow-md';
+      'fixed z-10 left-4 top-1/2 -translate-y-1/2 px-2 py-4 border border-neutral-300 rounded-md shadow-md';
     return collapsed ? `${defaultClasses} collapsed` : defaultClasses;
   };
 

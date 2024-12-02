@@ -7,7 +7,7 @@ export default function ToolPanel() {
   const { tool, setTool } = useContext(ToolsContext) as ToolsContextType;
 
   const defaultClasses =
-    'fixed top-4 left-1/2 -translate-x-1/2 flex items-center py-2 px-4 space-x-3 border border-neutral-200 rounded-md shadow-md';
+    'fixed z-10 top-4 left-1/2 -translate-x-1/2 flex items-center py-2 px-4 space-x-3 border border-neutral-200 rounded-md shadow-md';
 
   return (
     <div className={defaultClasses}>

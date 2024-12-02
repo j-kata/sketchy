@@ -4,11 +4,11 @@ import { RoughCanvas } from 'roughjs/bin/canvas';
 // import { RoughCanvas } from 'roughjs/bin/canvas';
 
 export type FigureProps = {
-  id: number;
+  id?: number;
   x1: number;
   y1: number;
-  x2: number;
-  y2: number;
+  x2?: number;
+  y2?: number;
   offset?: Point;
   position?: string;
   selected?: boolean;
@@ -36,11 +36,11 @@ export default abstract class Figure {
   };
 
   constructor(props: FigureProps) {
-    this.id = props.id;
+    this.id = props.id || 0;
     this.x1 = props.x1;
     this.y1 = props.y1;
-    this.x2 = props.x2;
-    this.y2 = props.y2;
+    this.x2 = props.x2 || props.x1;
+    this.y2 = props.y2 || props.y1;
     this.offset = props.offset ?? { x: 0, y: 0 };
     this.position = props.position ?? Figure.POSITION.RB;
     this.selected = props.selected ?? true;

@@ -1,118 +1,76 @@
-import { useContext, useLayoutEffect, useReducer, useRef } from 'react';
-import rough from 'roughjs';
-import reducer from '../utils/canvasReducer';
-import { cursorStyle, getElementPosition } from '../utils/canvasUtils';
-
-import { Tool } from '../types';
+import { MouseEvent, useContext, useEffect, useRef } from 'react';
 import { ToolsContext, ToolsContextType } from '../context/ToolsContext';
+import { Tool } from '../types';
 import { OptionsContext, OptionsContextType } from '../context/OptionsContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../reducers/store';
+import { drawMove, drawStart, drawEnd } from '../reducers/drawingSlice';
+import rough from 'roughjs';
 
-interface CanvasProps {
+type CanvasProps = {
   width: number;
   height: number;
-}
+};
+
+type CanvasAction = 'draw' | 'select';
 
 export default function Canvas({ width, height }: CanvasProps) {
-  const { options } = useContext(OptionsContext) as OptionsContextType;
-  const { tool } = useContext(ToolsContext) as ToolsContextType;
+  const backCanvasRef = useRef<HTMLCanvasElement>(null);
+  const frontCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [{ history, currentStep }, dispatch] = useReducer(reducer, {
-    history: [[]],
-    currentStep: 0,
+  const { tool } = useContext(ToolsContext) as ToolsContextType;
+  const { options } = useContext(OptionsContext) as OptionsContextType;
+  const current = useSelector((state: RootState) => state.drawing.current);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (current) {
+      const roughCanvas = createRoughCanvas(frontCanvasRef.current!);
+      current.draw(roughCanvas);
+    }
   });
 
-  const elements = history[currentStep];
+  const currentAction: CanvasAction = tool == Tool.SELECT ? 'select' : 'draw';
 
-  useLayoutEffect(() => {
-    const canvas = canvasRef.current as HTMLCanvasElement;
+  function createRoughCanvas(canvas: HTMLCanvasElement) {
+    const ctxFront = canvas.getContext('2d');
+    ctxFront?.clearRect(0, 0, canvas.width, canvas.height);
+    return rough.canvas(canvas);
+  }
 
-    const ctx = canvas.getContext('2d');
-    ctx?.clearRect(0, 0, canvas.width, canvas.height);
-    const roughCanvas = rough.canvas(canvas);
-
-    elements.forEach((element) => {
-      element.draw(roughCanvas);
-    });
-  }, [elements, currentStep, options]);
-
-  function handleMouseDown(event: React.MouseEvent): void {
+  function handleMouseDown(event: MouseEvent) {
     const { clientX: x, clientY: y } = event;
-    switch (tool) {
-      case Tool.SELECT: {
-        dispatch({ type: 'grab', x, y });
-        break;
-      }
-      default: {
-        dispatch({ type: 'draw', x, y, tool: tool, options: options });
-        break;
-      }
+    if (currentAction == 'draw') {
+      dispatch(drawStart({ point: { x, y }, tool, options }));
     }
   }
 
-  function handleMouseMove(event: React.MouseEvent): void {
+  function handleMouseMove(event: MouseEvent) {
     const { clientX: x, clientY: y } = event;
 
-    if (tool === Tool.SELECT && event.buttons === 0) {
-      const target = event.target as HTMLElement;
-      const position = getElementPosition(elements, { x, y });
-      target.style.cursor = cursorStyle(position);
+    if (currentAction == 'draw') {
+      dispatch(drawMove({ x, y }));
     }
-
-    dispatch({ type: 'move', x, y });
   }
 
-  function handleMouseUp(): void {
-    dispatch({ type: 'release' });
-  }
-
-  function undo(): void {
-    dispatch({ type: 'undo' });
-  }
-
-  function redo(): void {
-    dispatch({ type: 'redo' });
-  }
-
-  function clear(): void {
-    dispatch({ type: 'clear' });
+  function handleMouseUp() {
+    if (currentAction == 'draw') {
+      dispatch(drawEnd());
+    }
   }
 
   return (
-    <>
+    <div className='relative'>
+      <canvas ref={backCanvasRef} width={width} height={height}></canvas>
       <canvas
-        ref={canvasRef}
-        width={width}
-        height={height}
+        ref={frontCanvasRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
+        width={width}
+        height={height}
+        className='absolute inset-0'
       ></canvas>
-      <div className='fixed bottom-10 left-10 flex space-x-2'>
-        <button
-          type='button'
-          disabled={currentStep === 0}
-          onClick={undo}
-          className='px-2 border rounded-md disabled:opacity-40'
-        >
-          undo
-        </button>
-        <button
-          type='button'
-          disabled={currentStep === history.length - 1}
-          onClick={redo}
-          className='px-2 border rounded-md disabled:opacity-40'
-        >
-          redo
-        </button>
-        <button
-          type='button'
-          onClick={clear}
-          className='px-2 border rounded-md'
-        >
-          clear all
-        </button>
-      </div>
-    </>
+    </div>
   );
 }
