@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import Figure from '../entities/Figure';
-import { Options, Point, Tool } from '../types';
-import { createElement } from './canvasUtils';
+import { Element, Options, Point, Tool } from '../types';
+import * as Figure from './canvasUtils';
 
 interface DrawingState {
-  current: Figure | null;
+  current: Element | null;
 }
 
 interface DrawingPayload {
@@ -20,12 +19,12 @@ export const drawingSlice = createSlice({
   } as DrawingState,
   reducers: {
     drawStart: (state, action: PayloadAction<DrawingPayload>) => {
-      console.log('sss');
       const { tool, options, point } = action.payload;
-      state.current = createElement(point, tool, options);
+      state.current = Figure.create(point, tool, options);
     },
     drawMove: (state, action: PayloadAction<Point>) => {
-      state.current = state.current && state.current.update(action.payload);
+      state.current =
+        state.current && Figure.resize(state.current, action.payload);
     },
     drawEnd: (state) => {
       state.current = null;

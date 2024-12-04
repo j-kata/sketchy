@@ -5,6 +5,7 @@ import { OptionsContext, OptionsContextType } from '../context/OptionsContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../reducers/store';
 import { drawMove, drawStart, drawEnd } from '../reducers/drawingSlice';
+import * as Figure from '../reducers/canvasUtils';
 import rough from 'roughjs';
 
 type CanvasProps = {
@@ -26,7 +27,7 @@ export default function Canvas({ width, height }: CanvasProps) {
   useEffect(() => {
     if (current) {
       const roughCanvas = createRoughCanvas(frontCanvasRef.current!);
-      current.draw(roughCanvas);
+      Figure.draw(current, roughCanvas);
     }
   });
 

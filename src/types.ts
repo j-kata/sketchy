@@ -70,3 +70,25 @@ export type SupportedOptionEnum =
   | typeof Style;
 
 export type SupportedOption = Color | Background | Width | Style;
+
+export type Element = {
+  id?: number;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  offset?: Point;
+  position?: CursorPosition;
+  selected?: boolean;
+  tool: Tool;
+  options: Options;
+};
+
+export enum CursorPosition {
+  LT = 'LEFT_TOP',
+  LB = 'LEFT_BOTTOM',
+  RT = 'RIGHT_TOP',
+  RB = 'RIGHT_BOTTOM',
+  OUT = 'OUTSIDE',
+  IN = 'INSIDE',
+}
