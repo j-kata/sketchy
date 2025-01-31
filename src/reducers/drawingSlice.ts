@@ -20,14 +20,14 @@ export const drawingSlice = createSlice({
   reducers: {
     drawStart: (state, action: PayloadAction<DrawingPayload>) => {
       const { tool, options, point } = action.payload;
-      state.current = Figure.create(point, tool, options);
+      state.current = Figure.create(point, point, tool, options);
     },
     drawMove: (state, action: PayloadAction<Point>) => {
       state.current =
         state.current && Figure.resize(state.current, action.payload);
     },
     drawEnd: (state) => {
-      state.current = null;
+      // state.current = null;
     },
   },
 });

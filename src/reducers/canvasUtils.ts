@@ -5,9 +5,14 @@ import * as Rectangle from './Rectangle';
 import * as Ellipse from './Ellipse';
 import { Drawable } from 'roughjs/bin/core';
 
-export function create({ x, y }: Point, tool: Tool, options: Options): Element {
+export function create(
+  { x: x1, y: y1 }: Point,
+  { x: x2, y: y2 }: Point,
+  tool: Tool,
+  options: Options
+): Element {
   const seed = 1 + Math.random() * 200;
-  return { x1: x, y1: y, x2: x, y2: y, options: { ...options, seed }, tool };
+  return { x1, y1, x2, y2, options: { ...options, seed }, tool };
 }
 
 export function update(element: Element, point: Point): Element {
