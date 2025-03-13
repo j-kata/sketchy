@@ -1,4 +1,4 @@
-import { Options, Point, CursorPosition } from '../types';
+import { Options, Point, CursorPosition } from '../shared/types';
 
 export type FigureProps = {
   id?: number;

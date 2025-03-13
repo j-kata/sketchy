@@ -1,5 +1,5 @@
 import { Drawable } from 'roughjs/bin/core';
-import { Options, Point, Position } from '../types';
+import { Options, Point, Position } from '../shared/types';
 import { RoughCanvas } from 'roughjs/bin/canvas';
 // import { RoughCanvas } from 'roughjs/bin/canvas';
 

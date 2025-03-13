@@ -1,5 +1,5 @@
 import { RoughCanvas } from 'roughjs/bin/canvas';
-import { Element } from '../types';
+import { Element } from '../shared/types';
 import * as Figure from './canvasUtils';
 
 export function draw(element: Element, canvas: RoughCanvas) {

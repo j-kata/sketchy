@@ -1,48 +1,45 @@
-import {
-  MouseEvent,
-  useState,
-  useContext,
-  useEffect,
-  useRef,
-  TouchEvent,
-} from 'react';
-import { ToolsContext, ToolsContextType } from '../context/ToolsContext';
-import { Tool } from '../types';
-import { OptionsContext, OptionsContextType } from '../context/OptionsContext';
-import { Point } from '../types';
+import { MouseEvent, useState, useEffect, useRef } from 'react';
+
+import { Options } from '../options/types';
+import { Tool } from '../tools/types';
+import { Point } from '../../shared/types';
 import rough from 'roughjs';
-import Figure from '../models/Figure';
-import { Line } from '../models/Line';
-import { Rectangle } from '../models/Rectangle';
-import { Ellipse } from '../models/Ellipse';
-import { FigureFactory } from '../models/FigureFactory';
+import Figure from '../../models/Figure';
+import { FigureFactory } from '../../models/FigureFactory';
+import {
+  OptionsContext,
+  OptionsContextType,
+} from '../../context/OptionsContext';
+import { ToolsContext, ToolsContextType } from '../../context/ToolsContext';
+
+import { useContext } from 'react';
 
 type CanvasProps = {
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
+  action: string;
 };
 
-type TouchCoords = {
-  touch1: { pageX: number; pageY: number };
-  touch2: { pageX: number; pageY: number };
-};
-
-type CanvasAction = 'draw' | 'select';
-
-export default function Canvas({ width, height }: CanvasProps) {
-  const backCanvasRef = useRef<HTMLCanvasElement>(null);
-  const frontCanvasRef = useRef<HTMLCanvasElement>(null);
-
+export default function Canvas({
+  action,
+  width = window.innerWidth,
+  height = window.innerHeight,
+}: CanvasProps) {
   const { tool, setTool } = useContext(ToolsContext) as ToolsContextType;
   const { options } = useContext(OptionsContext) as OptionsContextType;
 
-  const [touchCoords, setTouchCoords] = useState<TouchCoords | null>(null);
-  const [touchMode, setTouchMode] = useState<'single' | 'double'>('single');
+  const backCanvasRef = useRef<HTMLCanvasElement>(null);
+  const frontCanvasRef = useRef<HTMLCanvasElement>(null);
+
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState<Point>({ x: 0, y: 0 });
 
   const [current, setCurrent] = useState<Figure | null>(null);
   const [store, setStore] = useState<Figure[]>([]);
+
+  useEffect(() => {
+    window.addEventListener('mouseup', handleMouseUp);
+  }, [current]);
 
   useEffect(() => {
     const canvasFront = frontCanvasRef.current!;
@@ -63,22 +60,15 @@ export default function Canvas({ width, height }: CanvasProps) {
     return () => window.removeEventListener('wheel', handleWheel);
   }, [scale, offset, store, current]);
 
-  const currentAction: CanvasAction = tool == Tool.SELECT ? 'select' : 'draw';
-
-  // function handleTouchStart({ touches }: TouchEvent) {
-  //   if (touches.length == 1) {
-  //     setTouchMode('single');
-  //   } else {
-  //     setTouchMode('double');
-  //   }
-  //   setTouchCoords({ touch1: touches[0], touch2: touches[1] });
-  // }
-
   function handleMouseDown(event: MouseEvent) {
-    const { clientX: x, clientY: y } = event;
+    if (event.target !== frontCanvasRef.current) return;
+    const { pageX: x, pageY: y } = event;
 
-    if (currentAction == 'draw') {
-      const figure = FigureFactory.createFigure(tool, options, { x, y });
+    if (action == 'paint') {
+      const figure = FigureFactory.createFigure(tool, options, {
+        x: x,
+        y: y,
+      });
       setCurrent(figure);
     }
   }
@@ -88,11 +78,10 @@ export default function Canvas({ width, height }: CanvasProps) {
 
     if (store.length == 0) return;
 
-    let newScale = 1;
     if (event.ctrlKey) {
       const wheel = event.deltaY < 0 ? 1 : -1;
       const zoom = Math.exp(wheel * 0.1);
-      newScale = scale * zoom;
+      let newScale = scale * zoom;
       setScale(newScale);
 
       const realX = (event.pageX - offset.x) / scale;
@@ -106,11 +95,64 @@ export default function Canvas({ width, height }: CanvasProps) {
       });
     } else {
       setOffset({
-        x: offset.x - event.deltaX / newScale,
-        y: offset.y - event.deltaY / newScale,
+        x: offset.x - event.deltaX / scale,
+        y: offset.y - event.deltaY / scale,
       });
     }
   }
+
+  function handleMouseMove({ pageX, pageY }: MouseEvent) {
+    if (action == 'paint') {
+      if (current) {
+        const copy = current.clone();
+        copy.resize({ x: pageX, y: pageY });
+        setCurrent(copy);
+      }
+    }
+  }
+
+  function handleMouseUp() {
+    if (action == 'paint') {
+      if (current) {
+        const copy = current.clone();
+        copy.point1 = {
+          x: (copy.point1.x - offset.x) / scale,
+          y: (copy.point1.y - offset.y) / scale,
+        };
+        copy.point2 = {
+          x: (copy.point2.x - offset.x) / scale,
+          y: (copy.point2.y - offset.y) / scale,
+        };
+        setStore([...store, copy]);
+        setCurrent(null);
+        setTool(Tool.SELECT);
+      }
+    }
+  }
+
+  return (
+    <div className='relative'>
+      <canvas ref={backCanvasRef} width={width} height={height}></canvas>
+      <canvas
+        id='canvas'
+        ref={frontCanvasRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        width={width}
+        height={height}
+        className='absolute inset-0'
+      ></canvas>
+    </div>
+  );
+
+  // function handleTouchStart({ touches }: TouchEvent) {
+  //   if (touches.length == 1) {
+  //     setTouchMode('single');
+  //   } else {
+  //     setTouchMode('double');
+  //   }
+  //   setTouchCoords({ touch1: touches[0], touch2: touches[1] });
+  // }
 
   // function handleTouchMove({ touches }: TouchEvent) {
   //   console.log(touches);
@@ -132,35 +174,6 @@ export default function Canvas({ width, height }: CanvasProps) {
   //   }
   //   setTouchCoords(currentTouch);
   // }
-
-  function handleMouseMove({ clientX, clientY }: MouseEvent) {
-    if (currentAction == 'draw') {
-      if (current) {
-        const copy = current.clone();
-        copy.resize({ x: clientX, y: clientY });
-        setCurrent(copy);
-      }
-    }
-  }
-
-  function handleMouseUp() {
-    if (currentAction == 'draw') {
-      if (current) {
-        const copy = current.clone();
-        copy.point1 = {
-          x: (copy.point1.x - offset.x) / scale,
-          y: (copy.point1.y - offset.y) / scale,
-        };
-        copy.point2 = {
-          x: (copy.point2.x - offset.x) / scale,
-          y: (copy.point2.y - offset.y) / scale,
-        };
-        setStore([...store, copy]);
-        setCurrent(null);
-        setTool(Tool.SELECT);
-      }
-    }
-  }
 
   // function touchDistance(touches: TouchCoords) {
   //   const squareX = Math.pow(touches.touch1.pageX - touches.touch2.pageX, 2);
@@ -194,20 +207,4 @@ export default function Canvas({ width, height }: CanvasProps) {
   //   const panY = midY - prevMidY;
   //   return { x: panX, y: panY };
   // }
-
-  return (
-    <div className='relative'>
-      <canvas ref={backCanvasRef} width={width} height={height}></canvas>
-      <canvas
-        id='canvas'
-        ref={frontCanvasRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        width={width}
-        height={height}
-        className='absolute inset-0'
-      ></canvas>
-    </div>
-  );
 }

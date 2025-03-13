@@ -2,7 +2,9 @@ import Figure from '../entities/Figure';
 import Rectangle from '../entities/Rectangle';
 import Line from '../entities/Line';
 import Ellipse from '../entities/Ellipse';
-import { Options, Point, Tool } from '../types';
+import { Point } from '../shared/types';
+import { Options } from '../components/options/types';
+import { Tool } from '../components/tools/types';
 
 export function createElement(
   elements: Figure[],

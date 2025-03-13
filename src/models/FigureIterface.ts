@@ -1,5 +1,5 @@
 import { RoughCanvas } from 'roughjs/bin/canvas';
-import { Options, Point, CursorPosition } from '../types';
+import { Options, Point, CursorPosition } from '../shared/types';
 import { Drawable } from 'roughjs/bin/core';
 
 export interface FigureInterface {

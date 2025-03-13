@@ -3,7 +3,7 @@ import rough from 'roughjs';
 import reducer from '../utils/canvasReducer';
 import { cursorStyle, getElementPosition } from '../utils/canvasUtils';
 
-import { Tool } from '../types';
+import { Tool } from '../components/tools/types';
 import { ToolsContext, ToolsContextType } from '../context/ToolsContext';
 import { OptionsContext, OptionsContextType } from '../context/OptionsContext';
 

@@ -1,10 +1,8 @@
-import Canvas from './components/Canvas';
-import ToolPanel from './components/ToolPanel';
-import OptionPanel from './components/OptionPanel';
 import { ToolsProvider } from './context/ToolsContext';
 import { OptionsProvider } from './context/OptionsContext';
 import { Provider } from 'react-redux';
 import { store } from './reducers/store';
+import Painter from './components/painter/Painter';
 
 function App() {
   return (
@@ -12,9 +10,7 @@ function App() {
       <Provider store={store}>
         <ToolsProvider>
           <OptionsProvider>
-            <ToolPanel />
-            <OptionPanel />
-            <Canvas width={window.innerWidth} height={window.innerHeight} />
+            <Painter />
           </OptionsProvider>
         </ToolsProvider>
       </Provider>

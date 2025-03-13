@@ -1,5 +1,11 @@
 import { createContext, ReactNode, useState } from 'react';
-import { Background, Color, Options, Style, Width } from '../types';
+import {
+  Options,
+  Stroke,
+  Fill,
+  FillStyle,
+  StrokeWidth,
+} from '../components/options/types';
 
 export type OptionsContextType = {
   options: Options;
@@ -7,10 +13,10 @@ export type OptionsContextType = {
 };
 
 const initialOptions = {
-  stroke: Color.BLACK,
-  fill: Background.TRANSPARENT,
-  strokeWidth: Width.XS,
-  fillStyle: Style.SOLID,
+  stroke: Stroke.BLACK,
+  strokeWidth: StrokeWidth.XS,
+  fill: Fill.TRANSPARENT,
+  fillStyle: FillStyle.SOLID,
 };
 
 export const OptionsContext = createContext<OptionsContextType | null>(null);

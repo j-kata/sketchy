@@ -1,9 +1,10 @@
-import { CursorPosition, Options, Point } from '../types';
+import { CursorPosition, Point } from '../shared/types';
 import { FigureInterface } from './FigureIterface';
 import { Drawable } from 'roughjs/bin/core';
 import { FigureProps } from './FigureProps';
 import { RoughCanvas } from 'roughjs/bin/canvas';
 import { Line } from './Line';
+import { Options } from 'roughjs/bin/core';
 
 export default abstract class Figure implements FigureInterface {
   id: number;
@@ -24,7 +25,7 @@ export default abstract class Figure implements FigureInterface {
     this.selected = true;
     this.position = CursorPosition.RB;
     this.offset = this.INITIAL_OFFSET;
-    this.options = this.INITIAL_OPTIONS;
+    this.options = { ...props.options, ...this.INITIAL_OPTIONS };
     this.drawable = null;
   }
 

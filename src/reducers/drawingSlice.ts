@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Element, Options, Point, Tool } from '../types';
+import { Element, Options, Point, Tool } from '../shared/types';
 import * as Figure from './canvasUtils';
 
 interface DrawingState {

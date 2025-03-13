@@ -1,5 +1,5 @@
 import Figure from './Figure';
-import { Point, Position } from '../types';
+import { Point, Position } from '../shared/types';
 import { RoughCanvas } from 'roughjs/bin/canvas';
 export default class Line extends Figure {
   clone(figure: Line = this) {

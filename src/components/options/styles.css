@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.option-stroke-black,
+.option-fill-black {
+  @apply bg-black;
+}
+.option-stroke-red,
+.option-fill-red {
+  @apply bg-red-600;
+}
+.option-stroke-green,
+.option-fill-green {
+  @apply bg-green-600;
+}
+.option-stroke-blue,
+.option-fill-blue {
+  @apply bg-blue-600;
+}
+.option-stroke-magenta,
+.option-fill-magenta {
+  @apply bg-fuchsia-600;
+}
+.option-stroke-yellow,
+.option-fill-yellow {
+  @apply bg-yellow-600;
+}
+.option-stroke-cyan,
+.option-fill-cyan {
+  @apply bg-cyan-600;
+}
+.option-stroke-white,
+.option-fill-white {
+  @apply bg-white;
+}
+
+.option-stroke-transparent,
+.option-fill-transparent {
+  @apply bg-[repeating-linear-gradient(45deg,#ccc_25%,transparent_25%,transparent_75%,#ccc_75%,#ccc),repeating-linear-gradient(45deg,#ccc_25%,transparent_25%,transparent_75%,#ccc_75%,#ccc)] bg-[size:22px,22px] bg-[position:0px_0px,11px_11px];
+}
+
+.option-strokewidth-xs {
+  @apply after:block after:w-5/6 after:h-px after:bg-black;
+}
+
+.option-strokewidth-sm {
+  @apply after:block after:w-5/6 after:h-0.5 after:bg-black;
+}
+
+.option-strokewidth-md {
+  @apply after:block after:w-5/6 after:h-[3px] after:bg-black;
+}
+
+.option-strokewidth-lg {
+  @apply after:block after:w-5/6 after:h-1 after:bg-black;
+}
+
+.option-strokewidth-xl {
+  @apply after:block after:w-5/6 after:h-[5px] after:bg-black;
+}
+
+.option-fillstyle-solid {
+  @apply p-0.5 bg-black bg-clip-content;
+}
+
+.option-fillstyle-zigzag {
+  @apply p-0.5 bg-clip-content bg-[repeating-linear-gradient(45deg,#000,#000_2px,transparent_2px,transparent_5px)];
+}
+
+.option-fillstyle-cross {
+  @apply p-0.5 bg-clip-content bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] [background-size:4px_4px];
+}
+
+.option-fillstyle-dots {
+  @apply p-0.5 bg-clip-content bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:7px_7px];
+}

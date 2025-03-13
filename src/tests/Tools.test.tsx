@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
 import '@testing-library/jest-dom';
-import Tools from '../components/ToolPanel';
-import { Tool } from '../types';
+import Tools from '../components/tools/ToolPanel';
+import { Tool } from '../shared/types';
 import { ToolsProvider } from '../context/ToolsContext';
 
 describe('Tools', () => {

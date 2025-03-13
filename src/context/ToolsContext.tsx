@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useState } from 'react';
-import { Tool } from '../types';
+import { Tool } from '../components/tools/types';
 
 export type ToolsContextType = {
   tool: Tool;

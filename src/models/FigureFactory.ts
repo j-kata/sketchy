@@ -1,4 +1,6 @@
-import { Options, Point, Tool } from '../types';
+import { Point } from '../shared/types';
+import { Options } from '../components/options/types';
+import { Tool } from '../components/tools/types';
 import { Ellipse } from './Ellipse';
 import { Line } from './Line';
 import { Rectangle } from './Rectangle';

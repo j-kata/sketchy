@@ -1,5 +1,5 @@
 import Figure from '../entities/Figure';
-import { Options, Tool } from '../types';
+import { Options, Tool } from '../shared/types';
 
 import {
   replaceElement,
