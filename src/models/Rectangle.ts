@@ -1,6 +1,5 @@
 import { RoughCanvas } from 'roughjs/bin/canvas';
 import Figure from './Figure';
-import { Options } from 'roughjs/bin/core';
 
 export class Rectangle extends Figure {
   draw(canvas: RoughCanvas) {
@@ -10,7 +9,7 @@ export class Rectangle extends Figure {
         this.y1,
         this.width,
         this.height,
-        this.options as Options
+        this.roughOptions
       );
     } else {
       canvas.draw(this.drawable);

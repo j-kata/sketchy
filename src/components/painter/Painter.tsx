@@ -12,20 +12,20 @@ import { Action } from './types';
 import { Tool } from '../tools/types';
 
 export default function Painter() {
-  const [action, setAction] = useState<Action>(Action.SELECT);
-  const { tool, setTool } = useContext(ToolsContext) as ToolsContextType;
-  const { options } = useContext(OptionsContext) as OptionsContextType;
+  const [action, setAction] = useState<Action>(Action.PAINT);
+  // const { tool, setTool } = useContext(ToolsContext) as ToolsContextType;
+  // const { options } = useContext(OptionsContext) as OptionsContextType;
 
-  function handleToolSelect(tool: Tool) {
-    setTool(tool);
-    setAction(tool == Tool.SELECT ? Action.SELECT : Action.PAINT);
-  }
+  // function handleToolSelect(tool: Tool) {
+  //   setTool(tool);
+  //   setAction(tool == Tool.SELECT ? Action.SELECT : Action.PAINT);
+  // }
 
   return (
     <>
-      <ToolPanel onClick={handleToolSelect} />
-      <OptionPanel show={action !== Action.SELECT} />
-      <Canvas action={action} />
+      {/* <ToolPanel onClick={handleToolSelect} /> */}
+      {/* <OptionPanel show={action !== Action.SELECT} /> */}
+      <Canvas width={window.innerWidth} height={window.innerHeight} />
     </>
   );
 }

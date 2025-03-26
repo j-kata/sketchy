@@ -9,7 +9,7 @@ export type ToolsContextType = {
 export const ToolsContext = createContext<ToolsContextType | null>(null);
 
 export function ToolsProvider({ children }: { children: ReactNode }) {
-  const [tool, setTool] = useState<Tool>(Tool.SELECT);
+  const [tool, setTool] = useState<Tool>(Tool.SQUARE);
 
   return (
     <ToolsContext.Provider value={{ tool, setTool }}>

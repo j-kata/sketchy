@@ -3,8 +3,7 @@ import { FigureInterface } from './FigureIterface';
 import { Drawable } from 'roughjs/bin/core';
 import { FigureProps } from './FigureProps';
 import { RoughCanvas } from 'roughjs/bin/canvas';
-import { Line } from './Line';
-import { Options } from 'roughjs/bin/core';
+import { Options } from '../components/options/types';
 
 export default abstract class Figure implements FigureInterface {
   id: number;
@@ -13,19 +12,21 @@ export default abstract class Figure implements FigureInterface {
   selected: boolean;
   position: CursorPosition;
   offset: Point;
+  seed: number;
   options: Options;
   drawable: Drawable | null;
-  INITIAL_OFFSET = Object.freeze({ x: 0, y: 0 });
-  INITIAL_OPTIONS = Object.freeze({ seed: 1 + Math.random() * 200 });
+  SEED = 1 + Math.random() * 200;
+  OFFSET = Object.freeze({ x: 0, y: 0 });
 
   constructor(props: FigureProps) {
     this.id = 0;
+    this.selected = true;
     this.point1 = props.point1;
     this.point2 = props.point2 ?? props.point1;
-    this.selected = true;
-    this.position = CursorPosition.RB;
-    this.offset = this.INITIAL_OFFSET;
-    this.options = { ...props.options, ...this.INITIAL_OPTIONS };
+    this.options = { ...props.options };
+    this.position = props.position || CursorPosition.RB;
+    this.seed = props.seed || this.SEED;
+    this.offset = props.offset || this.OFFSET;
     this.drawable = null;
   }
 
@@ -56,6 +57,14 @@ export default abstract class Figure implements FigureInterface {
 
   get height() {
     return this.y2 - this.y1;
+  }
+
+  get roughOptions() {
+    return {
+      ...this.options,
+      strokeWidth: parseInt(this.options.strokeWidth),
+      seed: this.seed,
+    };
   }
 
   resize(point: Point, position: CursorPosition = CursorPosition.RB) {
