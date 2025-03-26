@@ -15,6 +15,7 @@ import { ToolsContext, ToolsContextType } from '../../context/ToolsContext';
 import FrontCanvas from './FrontCanvas';
 import { CanvasProps } from './types';
 import BackCanvas from './BackCanvas';
+import { CanvasProvider } from './CanvasContext';
 
 export default function Canvas({
   width = window.innerWidth,
@@ -26,7 +27,7 @@ export default function Canvas({
   const [current, setCurrent] = useState<Figure | null>(null);
   const [store, setStore] = useState<Figure[]>([]);
 
-  const { tool, setTool } = useContext(ToolsContext) as ToolsContextType;
+  // const { tool, setTool } = useContext(ToolsContext) as ToolsContextType;
 
   function handleFinish(figure: Figure) {
     setStore([...store, figure]);
@@ -35,12 +36,14 @@ export default function Canvas({
 
   return (
     <div className='relative'>
-      <FrontCanvas
-        width={width}
-        height={height}
-        onDrawingFinished={handleFinish}
-      />
-      <BackCanvas width={width} height={height} store={store} />
+      <CanvasProvider>
+        <FrontCanvas
+          width={width}
+          height={height}
+          onDrawingFinished={handleFinish}
+        />
+        <BackCanvas width={width} height={height} store={store} />
+      </CanvasProvider>
     </div>
   );
 }
