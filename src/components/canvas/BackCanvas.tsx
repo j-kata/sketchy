@@ -1,17 +1,14 @@
 import { useEffect, useRef } from 'react';
 import rough from 'roughjs';
-import Figure from '../../models/Figure';
 import { CanvasProps } from './types';
 import { useCanvas } from './useCanvas';
+import { useStore } from './useStore';
 
-type BackCanvasProps = CanvasProps & {
-  store: Figure[];
-};
-
-export default function BackCanvas({ width, height, store }: BackCanvasProps) {
+export default function BackCanvas({ width, height }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { scale, changeScale, offset, changeOffset } = useCanvas();
+  const { store } = useStore();
 
   useEffect(() => {
     const canvas = canvasRef.current!;

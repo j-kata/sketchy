@@ -1,6 +1,6 @@
 import { RoughCanvas } from 'roughjs/bin/canvas';
-import Figure from './Figure';
-export class Ellipse extends Figure {
+import { Rectangle } from './Rectangle';
+export class Ellipse extends Rectangle {
   draw(canvas: RoughCanvas) {
     if (!this.drawable) {
       this.drawable = canvas.ellipse(

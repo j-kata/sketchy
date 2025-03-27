@@ -17,9 +17,12 @@ export default abstract class Figure implements FigureInterface {
   drawable: Drawable | null;
   SEED = 1 + Math.random() * 200;
   OFFSET = Object.freeze({ x: 0, y: 0 });
+  MAX_DISTANCE = 5;
+  static counter = 0;
+  static nextID = () => Figure.counter++;
 
   constructor(props: FigureProps) {
-    this.id = 0;
+    this.id = props.id || Figure.nextID();
     this.selected = true;
     this.point1 = props.point1;
     this.point2 = props.point2 ?? props.point1;
@@ -67,6 +70,15 @@ export default abstract class Figure implements FigureInterface {
     };
   }
 
+  move(point: Point, offset: Point = { x: 0, y: 0 }) {
+    const x1 = point.x - offset.x;
+    const y1 = point.y - offset.y;
+    const x2 = x1 + this.width;
+    const y2 = y1 + this.height;
+    this.point1 = { x: x1, y: y1 };
+    this.point2 = { x: x2, y: y2 };
+  }
+
   resize(point: Point, position: CursorPosition = CursorPosition.RB) {
     switch (position) {
       case CursorPosition.LT: {
@@ -91,6 +103,27 @@ export default abstract class Figure implements FigureInterface {
     //this.clone({...this, point1, point2})
   }
 
+  protected isNearPoint(point1: Point, point2: Point): boolean {
+    return (
+      Math.abs(point1.x - point2.x) < this.MAX_DISTANCE &&
+      Math.abs(point1.y - point2.y) < this.MAX_DISTANCE
+    );
+  }
+
+  protected isNearLine(point: Point, startPoint: Point, endPoint: Point) {
+    const offset =
+      this.distance(startPoint, endPoint) -
+      this.distance(startPoint, point) -
+      this.distance(endPoint, point);
+    return Math.abs(offset) < 1;
+  }
+
+  protected distance(a: Point, b: Point): number {
+    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+  }
+
   abstract draw(canvas: RoughCanvas): void;
   abstract clone(): Figure;
+  abstract isWithinElement(point: Point): boolean;
+  abstract cursorPosition(point: Point): CursorPosition;
 }
