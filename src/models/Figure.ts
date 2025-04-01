@@ -1,7 +1,6 @@
 import { CursorPosition, Point } from '../shared/types';
 import { FigureInterface } from './FigureIterface';
-import { Drawable } from 'roughjs/bin/core';
-import { FigureProps } from './FigureProps';
+import { FigureProps, PartialFigureProps } from './FigureProps';
 import { RoughCanvas } from 'roughjs/bin/canvas';
 import { Options } from '../components/options/types';
 
@@ -22,7 +21,7 @@ export default abstract class Figure implements FigureInterface {
 
   constructor(props: FigureProps) {
     this.id = props.id || Figure.nextID();
-    this.selected = true;
+    this.selected = props.selected ?? true;
     this.point1 = props.point1;
     this.point2 = props.point2 ?? props.point1;
     this.options = { ...props.options };
@@ -145,7 +144,7 @@ export default abstract class Figure implements FigureInterface {
   }
 
   abstract draw(canvas: RoughCanvas, offset: Point, scale: number): void;
-  abstract clone(): Figure;
+  abstract clone(values?: PartialFigureProps): Figure;
   abstract isWithinElement(point: Point): boolean;
   abstract cursorPosition(point: Point): CursorPosition;
 }

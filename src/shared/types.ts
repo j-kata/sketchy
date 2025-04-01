@@ -1,5 +1,3 @@
-import { Options } from '../components/options/types';
-
 export interface Point {
   x: number;
   y: number;

@@ -11,3 +11,5 @@ export type FigureProps = {
   seed?: number;
   offset?: Point;
 };
+
+export type PartialFigureProps = Partial<FigureProps>;

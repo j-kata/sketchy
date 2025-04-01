@@ -1,6 +1,7 @@
 import { RoughCanvas } from 'roughjs/bin/canvas';
 import { Rectangle } from './Rectangle';
 import { Point } from '../shared/types';
+import { PartialFigureProps } from './FigureProps';
 export class Ellipse extends Rectangle {
   draw(canvas: RoughCanvas, offset: Point, scale: number) {
     canvas.ellipse(
@@ -12,7 +13,7 @@ export class Ellipse extends Rectangle {
     );
   }
 
-  clone() {
-    return new Ellipse({ ...this });
+  clone(values: PartialFigureProps = {}) {
+    return new Ellipse({ ...this, ...values });
   }
 }

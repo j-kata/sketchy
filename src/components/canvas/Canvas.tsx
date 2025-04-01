@@ -16,7 +16,7 @@ import FrontCanvas from './FrontCanvas';
 import { CanvasProps } from './types';
 import BackCanvas from './BackCanvas';
 import { CanvasProvider } from './CanvasContext';
-import { StorageProvider } from './StorageContext';
+import { FiguresProvider } from './FiguresContext';
 
 export default function Canvas({
   width = window.innerWidth,
@@ -32,10 +32,10 @@ export default function Canvas({
   return (
     <div className='relative'>
       <CanvasProvider>
-        <StorageProvider>
+        <FiguresProvider>
           <FrontCanvas width={width} height={height} />
           <BackCanvas width={width} height={height} />
-        </StorageProvider>
+        </FiguresProvider>
       </CanvasProvider>
     </div>
   );

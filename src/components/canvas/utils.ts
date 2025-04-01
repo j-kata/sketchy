@@ -50,3 +50,10 @@ export function cursorStyle(position: CursorPosition): string {
     }
   }
 }
+
+export function realCoords(point: Point, offset: Point, scale: number) {
+  return {
+    x: (point.x - offset.x) / scale,
+    y: (point.y - offset.y) / scale,
+  };
+}

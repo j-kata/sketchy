@@ -1,15 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useReducer, useContext } from 'react';
 import rough from 'roughjs';
 import { CanvasProps } from './types';
 import { useCanvas } from './useCanvas';
-import { useStore } from './useStore';
+import { useFigures } from './useFigures';
 
 export default function BackCanvas({ width, height }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { scale, changeScale, offset, changeOffset } = useCanvas();
-  const { store } = useStore();
-
+  const { figures } = useFigures();
   useEffect(() => {
     const canvas = canvasRef.current!;
     const context = canvas.getContext('2d')!;
@@ -17,19 +16,21 @@ export default function BackCanvas({ width, height }: CanvasProps) {
     // context.save();
     // context.translate(offset.x, offset.y);
     // context.scale(scale, scale);
-    store.forEach((figure) => figure.draw(rough.canvas(canvas), offset, scale));
-    // context.restore();
-  }, [store, scale, offset]);
+    figures.forEach((figure) =>
+      figure.draw(rough.canvas(canvas), offset, scale)
+    );
+    // context.refigures();
+  }, [figures, scale, offset]);
 
   useEffect(() => {
     window.addEventListener('wheel', handleWheel, { passive: false });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [store, scale, offset]);
+  }, [figures, scale, offset]);
 
   function handleWheel(event: WheelEvent) {
     event.preventDefault();
 
-    if (store.length == 0) return;
+    if (figures.length == 0) return;
 
     if (event.ctrlKey) {
       changeScale({ x: event.pageX, y: event.pageY }, event.deltaY);

@@ -1,6 +1,7 @@
 import { RoughCanvas } from 'roughjs/bin/canvas';
 import Figure from './Figure';
 import { CursorPosition, Point } from '../shared/types';
+import { PartialFigureProps } from './FigureProps';
 
 export class Rectangle extends Figure {
   draw(canvas: RoughCanvas, offset: Point, scale: number) {
@@ -13,8 +14,8 @@ export class Rectangle extends Figure {
     );
   }
 
-  clone() {
-    return new Rectangle({ ...this });
+  clone(values: PartialFigureProps = {}) {
+    return new Rectangle({ ...this, ...values });
   }
 
   isWithinElement({ x, y }: Point): boolean {

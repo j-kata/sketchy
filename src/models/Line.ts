@@ -1,6 +1,7 @@
 import { RoughCanvas } from 'roughjs/bin/canvas';
 import Figure from './Figure';
 import { CursorPosition, Point } from '../shared/types';
+import { PartialFigureProps } from './FigureProps';
 
 export class Line extends Figure {
   draw(canvas: RoughCanvas, offset: Point, scale: number) {
@@ -13,8 +14,8 @@ export class Line extends Figure {
     );
   }
 
-  clone() {
-    return new Line({ ...this });
+  clone(values: PartialFigureProps = {}) {
+    return new Line({ ...this, ...values });
   }
 
   isWithinElement(point: Point): boolean {
