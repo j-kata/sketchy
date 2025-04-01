@@ -14,11 +14,11 @@ export default function BackCanvas({ width, height }: CanvasProps) {
     const canvas = canvasRef.current!;
     const context = canvas.getContext('2d')!;
     context.clearRect(0, 0, width, height);
-    context.save();
-    context.translate(offset.x, offset.y);
-    context.scale(scale, scale);
-    store.forEach((figure) => figure.draw(rough.canvas(canvas)));
-    context.restore();
+    // context.save();
+    // context.translate(offset.x, offset.y);
+    // context.scale(scale, scale);
+    store.forEach((figure) => figure.draw(rough.canvas(canvas), offset, scale));
+    // context.restore();
   }, [store, scale, offset]);
 
   useEffect(() => {

@@ -14,7 +14,6 @@ export default abstract class Figure implements FigureInterface {
   offset: Point;
   seed: number;
   options: Options;
-  drawable: Drawable | null;
   SEED = 1 + Math.random() * 200;
   OFFSET = Object.freeze({ x: 0, y: 0 });
   MAX_DISTANCE = 5;
@@ -30,7 +29,6 @@ export default abstract class Figure implements FigureInterface {
     this.position = props.position || CursorPosition.RB;
     this.seed = props.seed || this.SEED;
     this.offset = props.offset || this.OFFSET;
-    this.drawable = null;
   }
 
   get x1() {
@@ -70,6 +68,14 @@ export default abstract class Figure implements FigureInterface {
     };
   }
 
+  update(coords: Point) {
+    if (this.position === CursorPosition.IN) {
+      return this.move(coords, this.offset);
+    } else {
+      return this.resize(coords, this.position);
+    }
+  }
+
   move(point: Point, offset: Point = { x: 0, y: 0 }) {
     const x1 = point.x - offset.x;
     const y1 = point.y - offset.y;
@@ -81,6 +87,22 @@ export default abstract class Figure implements FigureInterface {
 
   resize(point: Point, position: CursorPosition = CursorPosition.RB) {
     switch (position) {
+      case CursorPosition.L: {
+        this.point1 = { x: point.x, y: this.y1 };
+        break;
+      }
+      case CursorPosition.R: {
+        this.point2 = { x: point.x, y: this.y2 };
+        break;
+      }
+      case CursorPosition.T: {
+        this.point1 = { x: this.x1, y: point.y };
+        break;
+      }
+      case CursorPosition.B: {
+        this.point2 = { x: this.x2, y: point.y };
+        break;
+      }
       case CursorPosition.LT: {
         this.point1 = point;
         break;
@@ -122,7 +144,7 @@ export default abstract class Figure implements FigureInterface {
     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
   }
 
-  abstract draw(canvas: RoughCanvas): void;
+  abstract draw(canvas: RoughCanvas, offset: Point, scale: number): void;
   abstract clone(): Figure;
   abstract isWithinElement(point: Point): boolean;
   abstract cursorPosition(point: Point): CursorPosition;

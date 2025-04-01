@@ -3,18 +3,14 @@ import Figure from './Figure';
 import { CursorPosition, Point } from '../shared/types';
 
 export class Line extends Figure {
-  draw(canvas: RoughCanvas) {
-    if (!this.drawable) {
-      this.drawable = canvas.line(
-        this.x1,
-        this.y1,
-        this.x2,
-        this.y2,
-        this.roughOptions
-      );
-    } else {
-      canvas.draw(this.drawable);
-    }
+  draw(canvas: RoughCanvas, offset: Point, scale: number) {
+    canvas.line(
+      this.x1 * scale + offset.x,
+      this.y1 * scale + offset.y,
+      this.x2 * scale + offset.x,
+      this.y2 * scale + offset.y,
+      this.roughOptions
+    );
   }
 
   clone() {

@@ -29,12 +29,13 @@ import {
 export default function FrontCanvas({ width, height }: CanvasProps) {
   const { tool, setTool } = useContext(ToolsContext) as ToolsContextType;
   const { options } = useContext(OptionsContext) as OptionsContextType;
-  const { shiftedCoords } = useCanvas();
+  const { offset, scale, shiftedCoords } = useCanvas();
   const { store, setStore } = useStore();
   const [current, setCurrent] = useState<Figure | null>(null);
+  const [action, setAction] = useState<string>('select');
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // To catch events outside screen
+  // To catch mouse leaving the screen
   useEffect(() => {
     window.addEventListener('mouseup', handleMouseUp);
     return () => window.removeEventListener('mouseup', handleMouseUp);
@@ -44,8 +45,22 @@ export default function FrontCanvas({ width, height }: CanvasProps) {
     const canvas = canvasRef.current!;
     const context = canvas.getContext('2d')!;
     context.clearRect(0, 0, width, height);
-    current?.draw(rough.canvas(canvas));
-  }, [current]);
+    current?.draw(rough.canvas(canvas), offset, scale);
+    const selectedEl = selected();
+    if (selectedEl) {
+      context.beginPath();
+      context.strokeStyle = '#74c0f8';
+      context.lineWidth = 1;
+      context.globalAlpha = 0.5;
+      context.rect(
+        selectedEl.x1 * scale + offset.x,
+        selectedEl.y1 * scale + offset.y,
+        selectedEl.width * scale,
+        selectedEl.height * scale
+      );
+      context.stroke();
+    }
+  }, [current, store, offset, scale]);
 
   function handleMouseDown({ target, pageX: x, pageY: y }: MouseEvent) {
     if (target !== canvasRef.current) return;
@@ -54,13 +69,31 @@ export default function FrontCanvas({ width, height }: CanvasProps) {
       const figure = FigureFactory.createFigure(tool, options, { x, y });
       setCurrent(figure);
     } else {
-      const element = elementByPoint(store, { x, y });
+      const selectedEl = selected();
+      let newStore: Figure[] = store;
+      if (selectedEl) {
+        const copy = selectedEl.clone();
+        copy.selected = false;
+        newStore = nextStore(copy);
+        setAction('noselected');
+      }
+      const element = elementByPoint(store, {
+        x: (x - offset.x) / scale,
+        y: (y - offset.y) / scale,
+      });
       if (element) {
         const copy = element.clone();
-        copy.offset = { x: x - element.x1, y: y - element.y1 };
-        copy.position = element.cursorPosition({ x, y });
+        copy.offset = {
+          x: (x - offset.x) / scale - element.x1,
+          y: (y - offset.y) / scale - element.y1,
+        };
+        copy.position = element.cursorPosition({
+          x: (x - offset.x) / scale,
+          y: (y - offset.y) / scale,
+        });
         copy.selected = true;
-        setStore(nextStore(copy));
+        setStore(nextStore(copy, newStore));
+        setAction('selected');
       }
     }
   }
@@ -74,12 +107,17 @@ export default function FrontCanvas({ width, height }: CanvasProps) {
       }
     } else {
       const currentTarget = target as HTMLElement;
-      currentTarget.style.cursor = cursorByPoint(store, { x, y });
-      const selectedEl = selected();
-      if (selectedEl) {
-        const copy = selectedEl.clone();
-        copy.move({ x, y }, copy.offset);
-        setStore(nextStore(copy));
+      currentTarget.style.cursor = cursorByPoint(store, {
+        x: (x - offset.x) / scale,
+        y: (y - offset.y) / scale,
+      });
+      if (action == 'selected') {
+        const selectedEl = selected();
+        if (selectedEl) {
+          const copy = selectedEl.clone();
+          copy.update({ x: (x - offset.x) / scale, y: (y - offset.y) / scale });
+          setStore(nextStore(copy));
+        }
       }
     }
   }
@@ -98,12 +136,13 @@ export default function FrontCanvas({ width, height }: CanvasProps) {
         }, 2000);
       }
     } else {
-      const selectedEl = selected();
-      if (selectedEl) {
-        const copy = selectedEl.clone();
-        copy.selected = false;
-        setStore(nextStore(copy));
-      }
+      setAction('released');
+      // const selectedEl = selected();
+      // if (selectedEl) {
+      //   const copy = selectedEl.clone();
+      //   copy.selected = false;
+      //   setStore(nextStore(copy));
+      // }
     }
   }
 
@@ -111,8 +150,8 @@ export default function FrontCanvas({ width, height }: CanvasProps) {
     return tool !== Tool.SELECT;
   }
 
-  function nextStore(element: Figure) {
-    return store.map((el) => (el.id === element.id ? element : el));
+  function nextStore(element: Figure, storage = store) {
+    return storage.map((el) => (el.id === element.id ? element : el));
   }
 
   function selected() {

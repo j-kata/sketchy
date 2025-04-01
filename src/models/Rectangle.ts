@@ -3,18 +3,14 @@ import Figure from './Figure';
 import { CursorPosition, Point } from '../shared/types';
 
 export class Rectangle extends Figure {
-  draw(canvas: RoughCanvas) {
-    if (!this.drawable) {
-      this.drawable = canvas.rectangle(
-        this.x1,
-        this.y1,
-        this.width,
-        this.height,
-        this.roughOptions
-      );
-    } else {
-      canvas.draw(this.drawable);
-    }
+  draw(canvas: RoughCanvas, offset: Point, scale: number) {
+    canvas.rectangle(
+      this.x1 * scale + offset.x,
+      this.y1 * scale + offset.y,
+      this.width * scale,
+      this.height * scale,
+      this.roughOptions
+    );
   }
 
   clone() {

@@ -11,6 +11,5 @@ export interface FigureInterface {
   offset: Point;
   position: CursorPosition;
   options: Options;
-  drawable: Drawable | null;
-  draw: (canvas: RoughCanvas) => void;
+  draw: (canvas: RoughCanvas, offset: Point, scale: number) => void;
 }
