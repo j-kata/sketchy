@@ -5,7 +5,7 @@ import {
   Fill,
   FillStyle,
   StrokeWidth,
-} from '../components/options/types';
+} from '../types/options';
 
 export type OptionsContextType = {
   options: Options;

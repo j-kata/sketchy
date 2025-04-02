@@ -1,6 +1,6 @@
-import { createContext, ReactNode, useReducer, useState } from 'react';
-import Figure from '../../models/Figure';
-import figuresReducer, { FigureDispatchType } from './figuresReducer';
+import { createContext, ReactNode, useReducer } from 'react';
+import Figure from '../models/Figure';
+import figuresReducer, { FigureDispatchType } from '../reducers/figuresReducer';
 
 type FiguresContextType = {
   figures: Figure[];

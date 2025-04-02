@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { FiguresContext } from './FiguresContext';
+import { FiguresContext } from '../contexts/FiguresContext';
 
 export function useFigures() {
   const context = useContext(FiguresContext);

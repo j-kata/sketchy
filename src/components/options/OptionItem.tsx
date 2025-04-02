@@ -1,4 +1,4 @@
-import { Option, OptionType } from './types';
+import { Option, OptionType } from '../../types/options';
 
 interface OptionItemInterface<T extends Option> {
   title: string;

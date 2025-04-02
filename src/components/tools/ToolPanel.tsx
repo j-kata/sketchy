@@ -1,7 +1,7 @@
 import { ToolItem } from './ToolItem';
-import { Tool } from '../../components/tools/types';
+import { Tool } from '../../types/Tool';
 import { useContext } from 'react';
-import { ToolsContext, ToolsContextType } from '../../context/ToolsContext';
+import { ToolsContext, ToolsContextType } from '../../contexts/ToolsContext';
 
 interface ToolPanelProps {
   onClick: (tool: Tool) => void;

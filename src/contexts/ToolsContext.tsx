@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useState } from 'react';
-import { Tool } from '../components/tools/types';
+import { Tool } from '../types/Tool';
 
 export type ToolsContextType = {
   tool: Tool;
@@ -9,7 +9,7 @@ export type ToolsContextType = {
 export const ToolsContext = createContext<ToolsContextType | null>(null);
 
 export function ToolsProvider({ children }: { children: ReactNode }) {
-  const [tool, setTool] = useState<Tool>(Tool.SQUARE);
+  const [tool, setTool] = useState<Tool>(Tool.ELLIPSE);
 
   return (
     <ToolsContext.Provider value={{ tool, setTool }}>

@@ -1,19 +1,19 @@
 import { MouseEvent, useState, useEffect, useRef, useContext } from 'react';
 
-import { Tool } from '../tools/types';
+import { Tool } from '../../types/Tool';
 import rough from 'roughjs';
 import Figure from '../../models/Figure';
 import { FigureFactory } from '../../models/FigureFactory';
 import {
   OptionsContext,
   OptionsContextType,
-} from '../../context/OptionsContext';
-import { ToolsContext, ToolsContextType } from '../../context/ToolsContext';
+} from '../../contexts/OptionsContext';
+import { ToolsContext, ToolsContextType } from '../../contexts/ToolsContext';
 import { CanvasProps } from './types';
-import { useCanvas } from './useCanvas';
-import { useFigures } from './useFigures';
+import { useCanvas } from '../../hooks/useCanvas';
+import { useFigures } from '../../hooks/useFigures';
 
-import { cursorByPoint, realCoords } from './utils';
+import { cursorByPoint, realCoords } from '../../utils/canvas';
 
 export default function FrontCanvas({ width, height }: CanvasProps) {
   const { tool, setTool } = useContext(ToolsContext) as ToolsContextType;
@@ -98,14 +98,6 @@ export default function FrontCanvas({ width, height }: CanvasProps) {
   function isPaintable() {
     return tool !== Tool.SELECT;
   }
-
-  // function nextStore(element: Figure, storage = store) {
-  //   return storage.map((el) => (el.id === element.id ? element : el));
-  // }
-
-  // function selected() {
-  //   return store.find((el) => el.selected);
-  // }
 
   return (
     <canvas

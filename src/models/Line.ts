@@ -1,7 +1,8 @@
 import { RoughCanvas } from 'roughjs/bin/canvas';
 import Figure from './Figure';
-import { CursorPosition, Point } from '../shared/types';
-import { PartialFigureProps } from './FigureProps';
+import { Point } from '../types/Point';
+import { CursorPosition } from '../types/CursorPosition';
+import { PartialFigureProps } from './types';
 
 export class Line extends Figure {
   draw(canvas: RoughCanvas, offset: Point, scale: number) {

@@ -1,8 +1,9 @@
-import { CursorPosition, Point } from '../shared/types';
 import { FigureInterface } from './FigureIterface';
-import { FigureProps, PartialFigureProps } from './FigureProps';
+import { FigureProps, PartialFigureProps } from './types';
 import { RoughCanvas } from 'roughjs/bin/canvas';
-import { Options } from '../components/options/types';
+import { Options } from '../types/options';
+import { Point } from '../types/Point';
+import { CursorPosition } from '../types/CursorPosition';
 
 export default abstract class Figure implements FigureInterface {
   id: number;

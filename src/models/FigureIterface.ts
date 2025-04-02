@@ -1,6 +1,8 @@
 import { RoughCanvas } from 'roughjs/bin/canvas';
-import { Point, CursorPosition } from '../shared/types';
-import { Options } from '../components/options/types';
+
+import { Options } from '../types/options';
+import { Point } from '../types/Point';
+import { CursorPosition } from '../types/CursorPosition';
 
 export interface FigureInterface {
   id: number;

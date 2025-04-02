@@ -1,11 +1,11 @@
 import { OptionItem } from './OptionItem';
-import { Option, OptionValues, OptionKey } from './types';
+import { Option, OptionValues, OptionKey } from '../../types/options';
 
 import { useContext } from 'react';
 import {
   OptionsContext,
   OptionsContextType,
-} from '../../context/OptionsContext';
+} from '../../contexts/OptionsContext';
 
 interface OptionPanelProps {
   show: boolean;

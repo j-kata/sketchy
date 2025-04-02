@@ -1,1 +1,5 @@
-@import './components/options/styles.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @import './components/options/styles.css'; */

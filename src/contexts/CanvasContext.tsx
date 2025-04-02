@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useState } from 'react';
-import { Point } from '../../shared/types';
+import { Point } from '../types/Point';
 
 export type CanvasContextType = {
   scale: number;
