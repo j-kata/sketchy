@@ -1,12 +1,4 @@
-import {
-  MouseEvent,
-  useState,
-  useEffect,
-  useRef,
-  useContext,
-  ChangeEvent,
-  useReducer,
-} from 'react';
+import { MouseEvent, useState, useEffect, useRef, useContext } from 'react';
 
 import { Tool } from '../tools/types';
 import rough from 'roughjs';
@@ -21,18 +13,12 @@ import { CanvasProps } from './types';
 import { useCanvas } from './useCanvas';
 import { useFigures } from './useFigures';
 
-import {
-  positionOnElement,
-  cursorStyle,
-  elementByPoint,
-  cursorByPoint,
-  realCoords,
-} from './utils';
+import { cursorByPoint, realCoords } from './utils';
 
 export default function FrontCanvas({ width, height }: CanvasProps) {
   const { tool, setTool } = useContext(ToolsContext) as ToolsContextType;
   const { options } = useContext(OptionsContext) as OptionsContextType;
-  const { offset, scale, shiftedCoords } = useCanvas();
+  const { offset, scale } = useCanvas();
   // const { store, setStore } = useStore();
   const [current, setCurrent] = useState<Figure | null>(null);
   const [action, setAction] = useState<string>('select');

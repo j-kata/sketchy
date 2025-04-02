@@ -6,7 +6,6 @@ export type CanvasContextType = {
   changeScale: (point: Point, delta: number) => void;
   offset: Point;
   changeOffset: (point: Point) => void;
-  shiftedCoords: (point: Point) => Point;
 };
 
 const initialValues = {
@@ -14,7 +13,6 @@ const initialValues = {
   offset: { x: 0, y: 0 },
   changeScale: () => {},
   changeOffset: () => {},
-  shiftedCoords: () => ({ x: 0, y: 0 }),
 };
 
 export const CanvasContext = createContext<CanvasContextType>(initialValues);
@@ -45,16 +43,9 @@ export function CanvasProvider({ children }: { children: ReactNode }) {
     setOffset({ x, y });
   }
 
-  function shiftedCoords(point: Point) {
-    return {
-      x: (point.x - offset.x) / scale,
-      y: (point.y - offset.y) / scale,
-    };
-  }
-
   return (
     <CanvasContext.Provider
-      value={{ scale, changeScale, offset, changeOffset, shiftedCoords }}
+      value={{ scale, changeScale, offset, changeOffset }}
     >
       {children}
     </CanvasContext.Provider>

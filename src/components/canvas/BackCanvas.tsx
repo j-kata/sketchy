@@ -1,4 +1,4 @@
-import { useEffect, useRef, useReducer, useContext } from 'react';
+import { useEffect, useRef } from 'react';
 import rough from 'roughjs';
 import { CanvasProps } from './types';
 import { useCanvas } from './useCanvas';
