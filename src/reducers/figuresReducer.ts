@@ -12,7 +12,7 @@ type Action =
       point: Point;
     }
   | {
-      type: 'move';
+      type: 'drag';
       point: Point;
     };
 
@@ -39,7 +39,7 @@ export default function figuresReducer(figures: State, action: Action): State {
       }
       return nextFigures;
     }
-    case 'move': {
+    case 'drag': {
       const selected = figures.find((f) => f.selected);
       if (selected) {
         const copy = selected.clone();

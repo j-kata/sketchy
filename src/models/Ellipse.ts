@@ -4,7 +4,6 @@ import { Point } from '../types/Point';
 import { PartialFigureProps } from './types';
 export class Ellipse extends Rectangle {
   draw(canvas: RoughCanvas, offset: Point, scale: number) {
-    console.log('sdfsf', this.centerX, this.centerY);
     canvas.ellipse(
       this.centerX * scale + offset.x,
       this.centerY * scale + offset.y,

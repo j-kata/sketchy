@@ -14,15 +14,16 @@ import { useCanvas } from '../../hooks/useCanvas';
 import { useFigures } from '../../hooks/useFigures';
 
 import { cursorByPoint, realCoords } from '../../utils/canvas';
+import { useAction } from '../../hooks/useAction';
+import { Action } from '../../types/Action';
 
 export default function FrontCanvas({ width, height }: CanvasProps) {
   const { tool, setTool } = useContext(ToolsContext) as ToolsContextType;
   const { options } = useContext(OptionsContext) as OptionsContextType;
   const { offset, scale } = useCanvas();
-  // const { store, setStore } = useStore();
-  const [current, setCurrent] = useState<Figure | null>(null);
-  const [action, setAction] = useState<string>('select');
+  const { action, setAction } = useAction();
   const { figures, dispatch } = useFigures();
+  const [current, setCurrent] = useState<Figure | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // To catch mouse leaving the screen
@@ -52,22 +53,25 @@ export default function FrontCanvas({ width, height }: CanvasProps) {
     // }
   }, [current, figures, offset, scale]);
 
+  const isDrawing = action === Action.DRAW;
+  const isDragging = action == Action.DRAG;
+
   function handleMouseDown({ target, pageX, pageY }: MouseEvent) {
     if (target !== canvasRef.current) return;
     const { x, y } = realCoords({ x: pageX, y: pageY }, offset, scale);
 
-    if (isPaintable()) {
+    if (isDrawing) {
       const figure = FigureFactory.createFigure(tool, options, { x, y });
       setCurrent(figure);
     } else {
       dispatch({ type: 'select', point: { x, y } });
-      setAction('selected');
+      setAction(Action.DRAG);
     }
   }
 
   function handleMouseMove({ target, pageX, pageY }: MouseEvent) {
     const { x, y } = realCoords({ x: pageX, y: pageY }, offset, scale);
-    if (isPaintable()) {
+    if (isDrawing) {
       if (current) {
         const copy = current.clone();
         copy.resize({ x, y });
@@ -77,26 +81,18 @@ export default function FrontCanvas({ width, height }: CanvasProps) {
       const currentTarget = target as HTMLElement;
       currentTarget.style.cursor = cursorByPoint(figures, { x, y });
 
-      if (action == 'selected') {
-        dispatch({ type: 'move', point: { x, y } });
+      if (isDragging) {
+        dispatch({ type: 'drag', point: { x, y } });
       }
     }
   }
 
   function handleMouseUp() {
-    if (isPaintable()) {
-      current && dispatch({ type: 'add', figure: current });
+    if (isDrawing && current) {
+      dispatch({ type: 'add', figure: current });
       setCurrent(null);
-      setTimeout(() => {
-        setTool(Tool.SELECT);
-      }, 2000);
-    } else {
-      setAction('released');
     }
-  }
-
-  function isPaintable() {
-    return tool !== Tool.SELECT;
+    setAction(Action.SELECT);
   }
 
   return (
