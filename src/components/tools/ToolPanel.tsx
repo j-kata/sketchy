@@ -1,14 +1,10 @@
 import { ToolItem } from './ToolItem';
 import { Tool } from '../../types/Tool';
 import { useContextSafe } from '../../hooks/useContextSafe';
-import { ToolsContext } from '../../contexts/ToolsContext';
+import { EditorContext } from '../../contexts/EditorContext';
 
-interface ToolPanelProps {
-  onClick: (tool: Tool) => void;
-}
-
-export default function ToolPanel({ onClick }: ToolPanelProps) {
-  const { tool } = useContextSafe(ToolsContext);
+export default function ToolPanel() {
+  const { tool, setTool } = useContextSafe(EditorContext);
 
   const defaultClasses =
     'fixed z-40 top-4 left-1/2 -translate-x-1/2 flex items-center py-2 px-4 space-x-3 bg-white border border-neutral-200 rounded-md shadow-md';
@@ -21,7 +17,7 @@ export default function ToolPanel({ onClick }: ToolPanelProps) {
           src={`/src/assets/${value}.svg`}
           alt={value}
           selected={tool == value}
-          onClick={() => onClick(value)}
+          onClick={() => setTool(value)}
         />
       ))}
     </div>
