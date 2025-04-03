@@ -2,13 +2,16 @@ import { useEffect, useRef } from 'react';
 import rough from 'roughjs';
 import { CanvasProps } from './types';
 import { useCanvas } from '../../hooks/useCanvas';
-import { useFigures } from '../../hooks/useFigures';
+import { useContextSafe } from '../../hooks/useContextSafe';
+import { FiguresContext } from '../../contexts/FiguresContext';
+import { CanvasContext } from '../../contexts/CanvasContext';
 
 export default function BackCanvas({ width, height }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const { scale, changeScale, offset, changeOffset } = useCanvas();
-  const { figures } = useFigures();
+  const { scale, changeScale, offset, changeOffset } =
+    useContextSafe(CanvasContext);
+  const { figures } = useContextSafe(FiguresContext);
   useEffect(() => {
     const canvas = canvasRef.current!;
     const context = canvas.getContext('2d')!;

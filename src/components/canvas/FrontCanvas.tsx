@@ -10,19 +10,20 @@ import {
 } from '../../contexts/OptionsContext';
 import { ToolsContext, ToolsContextType } from '../../contexts/ToolsContext';
 import { CanvasProps } from './types';
-import { useCanvas } from '../../hooks/useCanvas';
-import { useFigures } from '../../hooks/useFigures';
 
 import { cursorByPoint, realCoords } from '../../utils/canvas';
-import { useAction } from '../../hooks/useAction';
+import { useContextSafe } from '../../hooks/useContextSafe';
 import { Action } from '../../types/Action';
+import { ActionContext } from '../../contexts/ActionContext';
+import { FiguresContext } from '../../contexts/FiguresContext';
+import { CanvasContext } from '../../contexts/CanvasContext';
 
 export default function FrontCanvas({ width, height }: CanvasProps) {
   const { tool, setTool } = useContext(ToolsContext) as ToolsContextType;
   const { options } = useContext(OptionsContext) as OptionsContextType;
-  const { offset, scale } = useCanvas();
-  const { action, setAction } = useAction();
-  const { figures, dispatch } = useFigures();
+  const { offset, scale } = useContextSafe(CanvasContext);
+  const { action, setAction } = useContextSafe(ActionContext);
+  const { figures, dispatch } = useContextSafe(FiguresContext);
   const [current, setCurrent] = useState<Figure | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
