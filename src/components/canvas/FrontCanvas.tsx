@@ -1,26 +1,21 @@
-import { MouseEvent, useState, useEffect, useRef, useContext } from 'react';
-
-import { Tool } from '../../types/Tool';
+import { MouseEvent, useState, useEffect, useRef } from 'react';
 import rough from 'roughjs';
+
 import Figure from '../../models/Figure';
 import { FigureFactory } from '../../models/FigureFactory';
-import {
-  OptionsContext,
-  OptionsContextType,
-} from '../../contexts/OptionsContext';
-import { ToolsContext, ToolsContextType } from '../../contexts/ToolsContext';
 import { CanvasProps } from './types';
-
-import { cursorByPoint, realCoords } from '../../utils/canvas';
-import { useContextSafe } from '../../hooks/useContextSafe';
 import { Action } from '../../types/Action';
+import { cursorByPoint, realCoords } from '../../utils/canvas';
+import { OptionsContext } from '../../contexts/OptionsContext';
+import { ToolsContext } from '../../contexts/ToolsContext';
 import { ActionContext } from '../../contexts/ActionContext';
 import { FiguresContext } from '../../contexts/FiguresContext';
 import { CanvasContext } from '../../contexts/CanvasContext';
+import { useContextSafe } from '../../hooks/useContextSafe';
 
 export default function FrontCanvas({ width, height }: CanvasProps) {
-  const { tool, setTool } = useContext(ToolsContext) as ToolsContextType;
-  const { options } = useContext(OptionsContext) as OptionsContextType;
+  const { tool } = useContextSafe(ToolsContext);
+  const { options } = useContextSafe(OptionsContext);
   const { offset, scale } = useContextSafe(CanvasContext);
   const { action, setAction } = useContextSafe(ActionContext);
   const { figures, dispatch } = useContextSafe(FiguresContext);

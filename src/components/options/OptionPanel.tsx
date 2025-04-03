@@ -1,20 +1,15 @@
 import { OptionItem } from './OptionItem';
 import { Option, OptionValues, OptionKey } from '../../types/options';
 
-import { useContext } from 'react';
-import {
-  OptionsContext,
-  OptionsContextType,
-} from '../../contexts/OptionsContext';
+import { useContextSafe } from '../../hooks/useContextSafe';
+import { OptionsContext } from '../../contexts/OptionsContext';
 
 interface OptionPanelProps {
   show: boolean;
 }
 
 export default function OptionsPanel({ show }: OptionPanelProps) {
-  const { options, setOptions } = useContext(
-    OptionsContext
-  ) as OptionsContextType;
+  const { options, setOptions } = useContextSafe(OptionsContext);
 
   const handleChange = (key: OptionKey, value: Option) => {
     setOptions({ ...options, ...{ [key]: value } });

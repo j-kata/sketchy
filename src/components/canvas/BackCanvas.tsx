@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import rough from 'roughjs';
+
 import { CanvasProps } from './types';
-import { useCanvas } from '../../hooks/useCanvas';
 import { useContextSafe } from '../../hooks/useContextSafe';
 import { FiguresContext } from '../../contexts/FiguresContext';
 import { CanvasContext } from '../../contexts/CanvasContext';
