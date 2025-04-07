@@ -4,19 +4,17 @@ import rough from 'roughjs';
 import Figure from '../../models/Figure';
 import { FigureFactory } from '../../models/FigureFactory';
 import { CanvasProps } from './types';
-import { Action } from '../../types/Action';
-import { cursorByPoint, realCoords } from '../../utils/canvas';
-import { OptionsContext } from '../../contexts/OptionsContext';
+import { Mode } from '../../types/Mode';
+import { cursorByPoint, figureByPoint, realCoords } from '../../utils/canvas';
 import { FiguresContext } from '../../contexts/FiguresContext';
 import { CanvasContext } from '../../contexts/CanvasContext';
 import { useContextSafe } from '../../hooks/useContextSafe';
 import { EditorContext } from '../../contexts/EditorContext';
 
 export default function FrontCanvas({ width, height }: CanvasProps) {
-  const { options } = useContextSafe(OptionsContext);
   const { offset, scale } = useContextSafe(CanvasContext);
   const { figures, dispatch } = useContextSafe(FiguresContext);
-  const { tool, action, setAction } = useContextSafe(EditorContext);
+  const { tool, options, mode, setMode } = useContextSafe(EditorContext);
 
   const [current, setCurrent] = useState<Figure | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -32,62 +30,69 @@ export default function FrontCanvas({ width, height }: CanvasProps) {
     const context = canvas.getContext('2d')!;
     context.clearRect(0, 0, width, height);
     current?.draw(rough.canvas(canvas), offset, scale);
-    // const selectedEl = selected();
-    // if (selectedEl) {
-    //   context.beginPath();
-    //   context.strokeStyle = '#74c0f8';
-    //   context.lineWidth = 1;
-    //   context.globalAlpha = 0.5;
-    //   context.rect(
-    //     selectedEl.x1 * scale + offset.x,
-    //     selectedEl.y1 * scale + offset.y,
-    //     selectedEl.width * scale,
-    //     selectedEl.height * scale
-    //   );
-    //   context.stroke();
-    // }
+    const selectedEl = figures.find((f) => f.selected);
+
+    if (selectedEl) {
+      context.beginPath();
+      context.strokeStyle = '#74c0f8';
+      context.lineWidth = 1;
+      context.globalAlpha = 0.5;
+      context.rect(
+        selectedEl.x1 * scale + offset.x - 4,
+        selectedEl.y1 * scale + offset.y - 4,
+        selectedEl.width * scale + 8,
+        selectedEl.height * scale + 8
+      );
+      context.stroke();
+    }
   }, [current, figures, offset, scale]);
 
-  const isDrawing = action === Action.DRAW;
-  const isDragging = action == Action.DRAG;
+  useEffect(() => {
+    const selected = figures.find((f) => f.selected);
+    selected ? setMode(Mode.SELECT) : setMode(Mode.IDLE);
+  }, [figures]);
+
+  useEffect(() => {
+    dispatch({ type: 'redraw', options: options });
+  }, [options]);
+
+  const isDrawingMode = mode === Mode.DRAW;
 
   function handleMouseDown({ target, pageX, pageY }: MouseEvent) {
     if (target !== canvasRef.current) return;
     const { x, y } = realCoords({ x: pageX, y: pageY }, offset, scale);
 
-    if (isDrawing) {
+    if (isDrawingMode) {
       const figure = FigureFactory.createFigure(tool, options, { x, y });
       setCurrent(figure);
     } else {
       dispatch({ type: 'select', point: { x, y } });
-      setAction(Action.DRAG);
     }
   }
 
-  function handleMouseMove({ target, pageX, pageY }: MouseEvent) {
+  function handleMouseMove({ target, buttons, pageX, pageY }: MouseEvent) {
     const { x, y } = realCoords({ x: pageX, y: pageY }, offset, scale);
-    if (isDrawing) {
-      if (current) {
-        const copy = current.clone();
-        copy.resize({ x, y });
-        setCurrent(copy);
-      }
-    } else {
+
+    if (!buttons) {
       const currentTarget = target as HTMLElement;
       currentTarget.style.cursor = cursorByPoint(figures, { x, y });
+      return;
+    }
 
-      if (isDragging) {
-        dispatch({ type: 'drag', point: { x, y } });
-      }
+    if (current) {
+      const copy = current.clone();
+      copy.resize({ x, y });
+      setCurrent(copy);
+    } else {
+      dispatch({ type: 'drag', point: { x, y } });
     }
   }
 
   function handleMouseUp() {
-    if (isDrawing && current) {
-      dispatch({ type: 'add', figure: current });
-      setCurrent(null);
-    }
-    setAction(Action.SELECT);
+    if (!current) return;
+
+    dispatch({ type: 'add', figure: current });
+    setCurrent(null);
   }
 
   return (

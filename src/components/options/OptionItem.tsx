@@ -1,4 +1,5 @@
 import { Option, OptionType } from '../../types/options';
+import '../../styles/options.css';
 
 interface OptionItemInterface<T extends Option> {
   title: string;

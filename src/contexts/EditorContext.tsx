@@ -1,41 +1,60 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import { Tool } from '../types/Tool';
-import { Action } from '../types/Action';
+import { Mode } from '../types/Mode';
+import {
+  Fill,
+  FillStyle,
+  Options,
+  Stroke,
+  StrokeWidth,
+} from '../types/options';
 
 type EditorContextType = {
+  mode: Mode;
   tool: Tool;
-  action: Action;
+  options: Options;
+  setMode: (mode: Mode) => void;
   setTool: (tool: Tool) => void;
-  setAction: (action: Action) => void;
+  setOptions: (options: Options) => void;
 };
 
 const initialValues = {
+  mode: Mode.IDLE,
   tool: Tool.SELECT,
-  action: Action.SELECT,
+  options: {
+    stroke: Stroke.BLACK,
+    strokeWidth: StrokeWidth.XS,
+    fill: Fill.TRANSPARENT,
+    fillStyle: FillStyle.SOLID,
+  },
+  setMode: () => {},
   setTool: () => {},
-  setAction: () => {},
+  setOptions: () => {},
 };
 
 export const EditorContext = createContext<EditorContextType>(initialValues);
 
 export function EditorProvider({ children }: { children: ReactNode }) {
+  const [mode, setMode] = useState<Mode>(initialValues.mode);
   const [tool, setTool] = useState<Tool>(initialValues.tool);
-  const [action, setAction] = useState<Action>(initialValues.action);
+  const [options, setOptions] = useState<Options>(initialValues.options);
 
   useEffect(() => {
-    if (action == Action.SELECT) {
+    if (mode == Mode.SELECT || mode == Mode.IDLE) {
       setTool(Tool.SELECT);
     }
-  }, [action]);
+  }, [mode]);
 
   useEffect(() => {
     if (tool !== Tool.SELECT) {
-      setAction(Action.DRAW);
+      setMode(Mode.DRAW);
     }
   }, [tool]);
 
   return (
-    <EditorContext.Provider value={{ tool, action, setTool, setAction }}>
+    <EditorContext.Provider
+      value={{ mode, tool, options, setMode, setTool, setOptions }}
+    >
       {children}
     </EditorContext.Provider>
   );

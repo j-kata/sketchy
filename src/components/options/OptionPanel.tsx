@@ -2,23 +2,21 @@ import { OptionItem } from './OptionItem';
 import { Option, OptionValues, OptionKey } from '../../types/options';
 
 import { useContextSafe } from '../../hooks/useContextSafe';
-import { OptionsContext } from '../../contexts/OptionsContext';
+import { EditorContext } from '../../contexts/EditorContext';
+import { Mode } from '../../types/Mode';
 
-interface OptionPanelProps {
-  show: boolean;
-}
-
-export default function OptionsPanel({ show }: OptionPanelProps) {
-  const { options, setOptions } = useContextSafe(OptionsContext);
+export default function OptionsPanel() {
+  const { mode, options, setOptions } = useContextSafe(EditorContext);
 
   const handleChange = (key: OptionKey, value: Option) => {
     setOptions({ ...options, ...{ [key]: value } });
   };
 
+  const hidden = mode === Mode.IDLE;
   const defaultClasses =
     'fixed z-10 left-4 top-1/2 -translate-y-1/2 px-2 py-4 background-white border border-neutral-300 rounded-md shadow-md';
 
-  if (!show) return null;
+  if (hidden) return null;
 
   return (
     <div className={defaultClasses}>
