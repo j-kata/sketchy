@@ -3,15 +3,15 @@ import rough from 'roughjs';
 
 import Figure from '../../models/Figure';
 import { FigureFactory } from '../../models/FigureFactory';
-import { CanvasProps } from './types';
 import { Mode } from '../../types/Mode';
-import { cursorByPoint, figureByPoint, realCoords } from '../../utils/canvas';
+import { cursorByPoint, realCoords } from '../../utils/canvas';
 import { FiguresContext } from '../../contexts/FiguresContext';
 import { CanvasContext } from '../../contexts/CanvasContext';
 import { useContextSafe } from '../../hooks/useContextSafe';
 import { EditorContext } from '../../contexts/EditorContext';
+import { Size } from '../../types/Size';
 
-export default function FrontCanvas({ width, height }: CanvasProps) {
+export default function FrontCanvas({ width, height }: Size) {
   const { offset, scale } = useContextSafe(CanvasContext);
   const { figures, dispatch } = useContextSafe(FiguresContext);
   const { tool, options, mode, setMode } = useContextSafe(EditorContext);

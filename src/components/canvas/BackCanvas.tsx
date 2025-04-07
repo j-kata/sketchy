@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react';
 import rough from 'roughjs';
 
-import { CanvasProps } from './types';
 import { useContextSafe } from '../../hooks/useContextSafe';
 import { FiguresContext } from '../../contexts/FiguresContext';
 import { CanvasContext } from '../../contexts/CanvasContext';
+import { Size } from '../../types/Size';
 
-export default function BackCanvas({ width, height }: CanvasProps) {
+export default function BackCanvas({ width, height }: Size) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { scale, changeScale, offset, changeOffset } =
@@ -19,7 +19,7 @@ export default function BackCanvas({ width, height }: CanvasProps) {
     figures.forEach((figure) =>
       figure.draw(rough.canvas(canvas), offset, scale)
     );
-  }, [figures, scale, offset]);
+  }, [figures, scale, offset, width, height]);
 
   useEffect(() => {
     window.addEventListener('wheel', handleWheel, { passive: false });
