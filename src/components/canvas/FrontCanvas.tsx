@@ -5,7 +5,6 @@ import Figure from '../../models/Figure';
 import { FigureFactory } from '../../models/FigureFactory';
 import { Mode } from '../../types/Mode';
 import { cursorByPoint, realCoords } from '../../utils/canvas';
-import { FiguresContext } from '../../contexts/FiguresContext';
 import { CanvasContext } from '../../contexts/CanvasContext';
 import { useContextSafe } from '../../hooks/useContextSafe';
 import { EditorContext } from '../../contexts/EditorContext';
@@ -13,8 +12,8 @@ import { Size } from '../../types/Size';
 
 export default function FrontCanvas({ width, height }: Size) {
   const { offset, scale } = useContextSafe(CanvasContext);
-  const { figures, dispatch } = useContextSafe(FiguresContext);
-  const { tool, options, mode, setMode } = useContextSafe(EditorContext);
+  const { tool, options, mode, figures, dispatch } =
+    useContextSafe(EditorContext);
 
   const [current, setCurrent] = useState<Figure | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -47,15 +46,6 @@ export default function FrontCanvas({ width, height }: Size) {
     }
   }, [current, figures, offset, scale]);
 
-  useEffect(() => {
-    const selected = figures.find((f) => f.selected);
-    selected ? setMode(Mode.SELECT) : setMode(Mode.IDLE);
-  }, [figures]);
-
-  useEffect(() => {
-    dispatch({ type: 'redraw', options: options });
-  }, [options]);
-
   const isDrawingMode = mode === Mode.DRAW;
 
   function handleMouseDown({ target, pageX, pageY }: MouseEvent) {
@@ -73,7 +63,7 @@ export default function FrontCanvas({ width, height }: Size) {
   function handleMouseMove({ target, buttons, pageX, pageY }: MouseEvent) {
     const { x, y } = realCoords({ x: pageX, y: pageY }, offset, scale);
 
-    if (!buttons) {
+    if (!isDrawingMode && !buttons) {
       const currentTarget = target as HTMLElement;
       currentTarget.style.cursor = cursorByPoint(figures, { x, y });
       return;
@@ -88,11 +78,13 @@ export default function FrontCanvas({ width, height }: Size) {
     }
   }
 
-  function handleMouseUp() {
-    if (!current) return;
+  function handleMouseUp({ target }: Event) {
+    if (target !== canvasRef.current) return;
 
-    dispatch({ type: 'add', figure: current });
-    setCurrent(null);
+    if (current) {
+      dispatch({ type: 'add', figure: current });
+      setCurrent(null);
+    }
   }
 
   return (

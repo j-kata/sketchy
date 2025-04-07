@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { CanvasProvider } from '../../contexts/CanvasContext';
-import { FiguresProvider } from '../../contexts/FiguresContext';
 import BackCanvas from '../canvas/BackCanvas';
 import FrontCanvas from '../canvas/FrontCanvas';
 import { useThrottle } from '../../hooks/useThrottle';
@@ -25,12 +24,10 @@ export default function Painter() {
 
   return (
     <CanvasProvider>
-      <FiguresProvider>
-        <div className='relative'>
-          <FrontCanvas {...size} />
-          <BackCanvas {...size} />
-        </div>
-      </FiguresProvider>
+      <div className='relative'>
+        <FrontCanvas {...size} />
+        <BackCanvas {...size} />
+      </div>
     </CanvasProvider>
   );
 }

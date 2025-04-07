@@ -1,6 +1,8 @@
-import { createContext, ReactNode, useEffect, useState } from 'react';
-import { Tool } from '../types/Tool';
+import { createContext, ReactNode, useReducer } from 'react';
+import Figure from '../models/Figure';
+import editorReducer, { EditorDispatchType } from '../reducers/editorReducer';
 import { Mode } from '../types/Mode';
+import { Tool } from '../types/Tool';
 import {
   Fill,
   FillStyle,
@@ -9,16 +11,17 @@ import {
   StrokeWidth,
 } from '../types/options';
 
-type EditorContextType = {
+type EditorReducerType = {
   mode: Mode;
   tool: Tool;
   options: Options;
-  setMode: (mode: Mode) => void;
-  setTool: (tool: Tool) => void;
-  setOptions: (options: Options) => void;
+  figures: Figure[];
+};
+type EditorContextType = EditorReducerType & {
+  dispatch: EditorDispatchType;
 };
 
-const initialValues = {
+const initialReducerValues = {
   mode: Mode.IDLE,
   tool: Tool.SELECT,
   options: {
@@ -27,34 +30,22 @@ const initialValues = {
     fill: Fill.TRANSPARENT,
     fillStyle: FillStyle.SOLID,
   },
-  setMode: () => {},
-  setTool: () => {},
-  setOptions: () => {},
+  figures: [],
 };
 
-export const EditorContext = createContext<EditorContextType>(initialValues);
+const initialContextValues = {
+  ...initialReducerValues,
+  dispatch: () => {},
+};
+
+export const EditorContext =
+  createContext<EditorContextType>(initialContextValues);
 
 export function EditorProvider({ children }: { children: ReactNode }) {
-  const [mode, setMode] = useState<Mode>(initialValues.mode);
-  const [tool, setTool] = useState<Tool>(initialValues.tool);
-  const [options, setOptions] = useState<Options>(initialValues.options);
-
-  useEffect(() => {
-    if (mode == Mode.SELECT || mode == Mode.IDLE) {
-      setTool(Tool.SELECT);
-    }
-  }, [mode]);
-
-  useEffect(() => {
-    if (tool !== Tool.SELECT) {
-      setMode(Mode.DRAW);
-    }
-  }, [tool]);
+  const [state, dispatch] = useReducer(editorReducer, initialReducerValues);
 
   return (
-    <EditorContext.Provider
-      value={{ mode, tool, options, setMode, setTool, setOptions }}
-    >
+    <EditorContext.Provider value={{ ...state, dispatch }}>
       {children}
     </EditorContext.Provider>
   );

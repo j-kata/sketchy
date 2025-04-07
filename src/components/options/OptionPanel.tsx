@@ -6,10 +6,11 @@ import { EditorContext } from '../../contexts/EditorContext';
 import { Mode } from '../../types/Mode';
 
 export default function OptionsPanel() {
-  const { mode, options, setOptions } = useContextSafe(EditorContext);
+  const { mode, options, dispatch } = useContextSafe(EditorContext);
 
   const handleChange = (key: OptionKey, value: Option) => {
-    setOptions({ ...options, ...{ [key]: value } });
+    const nextOptions = { ...options, ...{ [key]: value } };
+    dispatch({ type: 'change_options', options: nextOptions });
   };
 
   const hidden = mode === Mode.IDLE;
