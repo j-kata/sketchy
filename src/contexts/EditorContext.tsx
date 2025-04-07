@@ -1,27 +1,15 @@
 import { createContext, ReactNode, useReducer } from 'react';
-import Figure from '../models/Figure';
 import editorReducer, { EditorDispatchType } from '../reducers/editorReducer';
 import { Mode } from '../types/Mode';
 import { Tool } from '../types/Tool';
-import {
-  Fill,
-  FillStyle,
-  Options,
-  Stroke,
-  StrokeWidth,
-} from '../types/options';
+import { Fill, FillStyle, Stroke, StrokeWidth } from '../types/options';
+import { EditorState } from '../reducers/EditorState';
 
-type EditorReducerType = {
-  mode: Mode;
-  tool: Tool;
-  options: Options;
-  figures: Figure[];
-};
-type EditorContextType = EditorReducerType & {
+type EditorContextType = EditorState & {
   dispatch: EditorDispatchType;
 };
 
-const initialReducerValues = {
+const initialValues = {
   mode: Mode.IDLE,
   tool: Tool.SELECT,
   options: {
@@ -33,16 +21,10 @@ const initialReducerValues = {
   figures: [],
 };
 
-const initialContextValues = {
-  ...initialReducerValues,
-  dispatch: () => {},
-};
-
-export const EditorContext =
-  createContext<EditorContextType>(initialContextValues);
+export const EditorContext = createContext<EditorContextType | null>(null);
 
 export function EditorProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(editorReducer, initialReducerValues);
+  const [state, dispatch] = useReducer(editorReducer, initialValues);
 
   return (
     <EditorContext.Provider value={{ ...state, dispatch }}>

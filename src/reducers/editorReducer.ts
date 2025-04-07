@@ -1,45 +1,16 @@
-import Figure from '../models/Figure';
 import { Mode } from '../types/Mode';
-import { Options } from '../types/options';
-import { Point } from '../types/Point';
 import { Tool } from '../types/Tool';
 import { figureByPoint } from '../utils/canvas';
+import { replaceFigure, unselectAll } from '../utils/canvas';
+import { EditorAction } from './EditorAction';
+import { EditorState } from './EditorState';
 
-type Action =
-  | {
-      type: 'add';
-      figure: Figure;
-    }
-  | {
-      type: 'select';
-      point: Point;
-    }
-  | {
-      type: 'drag';
-      point: Point;
-    }
-  | {
-      type: 'change_options';
-      options: Options;
-    }
-  | {
-      type: 'change_tool';
-      tool: Tool;
-    }
-  | {
-      type: 'unselect';
-    };
-
-type State = {
-  mode: Mode;
-  tool: Tool;
-  options: Options;
-  figures: Figure[];
-};
-
-export default function editorReducer(state: State, action: Action): State {
+export default function editorReducer(
+  state: EditorState,
+  action: EditorAction
+): EditorState {
   switch (action.type) {
-    case 'add': {
+    case 'add_figure': {
       return {
         ...state,
         mode: Mode.SELECT,
@@ -47,82 +18,44 @@ export default function editorReducer(state: State, action: Action): State {
         figures: [...state.figures, action.figure],
       };
     }
-    case 'select': {
-      const { x, y } = action.point;
-      const { figures } = state;
+    case 'select_figure': {
+      const figures = unselectAll(state.figures);
+      const selected = figureByPoint(figures, action.point);
+      const copy = selected ? selected.select(action.point) : null;
 
-      const nextFigures = figures.map((f) =>
-        f.selected ? f.clone({ selected: false }) : f
-      );
-      const selected = figureByPoint(figures, { x, y });
-      if (!selected)
-        return {
-          ...state,
-          mode: Mode.IDLE,
-          figures: nextFigures,
-        };
-
-      const copy = selected.clone({
-        offset: { x: x - selected.x1, y: y - selected.y1 },
-        position: selected.cursorPosition({ x, y }),
-        selected: true,
-      });
       return {
         ...state,
-        mode: Mode.SELECT,
-        figures: nextFigures.map((f) => (f.id === copy.id ? copy : f)),
+        mode: selected ? Mode.SELECT : Mode.IDLE,
+        figures: replaceFigure(figures, copy),
       };
     }
-    case 'drag': {
-      const { figures } = state;
-      const selected = figures.find((f) => f.selected);
-      if (!selected)
-        return {
-          ...state,
-          figures: figures,
-        };
+    case 'drag_figure': {
+      const selected = state.figures.find((f) => f.selected);
+      const copy = selected ? selected.update(action.point) : null;
 
-      const copy = selected.clone();
-      copy.update(action.point);
       return {
         ...state,
-        figures: figures.map((f) => (f.id === copy.id ? copy : f)),
+        figures: replaceFigure(state.figures, copy),
       };
     }
+
     case 'change_options': {
-      const { figures } = state;
-
-      const selected = figures.find((f) => f.selected);
-      if (!selected)
-        return {
-          ...state,
-          options: action.options,
-        };
-
-      const copy = selected.clone({ options: action.options });
+      const { options } = action;
+      const selected = state.figures.find((f) => f.selected);
+      const copy = selected ? selected.clone({ options }) : null;
       return {
         ...state,
         options: action.options,
-        figures: figures.map((f) => (f.id === copy.id ? copy : f)),
+        figures: replaceFigure(state.figures, copy),
       };
     }
     case 'change_tool': {
-      const { figures } = state;
-
-      if (action.tool !== Tool.SELECT) {
-        return {
-          ...state,
-          mode: Mode.DRAW,
-          tool: action.tool,
-          figures: figures.map((f) =>
-            f.selected ? f.clone({ selected: false }) : f
-          ),
-        };
-      }
+      const drawing = action.tool !== Tool.SELECT;
       return {
         ...state,
-        mode: Mode.IDLE,
+        mode: drawing ? Mode.DRAW : Mode.IDLE,
         tool: action.tool,
+        figures: drawing ? unselectAll(state.figures) : state.figures,
       };
     }
     default:
@@ -130,4 +63,4 @@ export default function editorReducer(state: State, action: Action): State {
   }
 }
 
-export type EditorDispatchType = React.Dispatch<Action>;
+export type EditorDispatchType = React.Dispatch<EditorAction>;

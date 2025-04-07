@@ -49,3 +49,12 @@ export function cursorStyle(position: CursorPosition): string {
     }
   }
 }
+
+export function unselectAll(figures: Figure[]): Figure[] {
+  return figures.map((f) => (f.selected ? f.clone({ selected: false }) : f));
+}
+
+export function replaceFigure(figures: Figure[], figure?: Figure | null) {
+  if (!figure) return figures;
+  return figures.map((f) => (f.id === figure.id ? figure : f));
+}

@@ -68,7 +68,7 @@ export default abstract class Figure implements FigureInterface {
     };
   }
 
-  update(coords: Point) {
+  update(coords: Point): Figure {
     if (this.position === CursorPosition.IN) {
       return this.move(coords, this.offset);
     } else {
@@ -76,53 +76,62 @@ export default abstract class Figure implements FigureInterface {
     }
   }
 
-  move(point: Point, offset: Point = { x: 0, y: 0 }) {
+  move(point: Point, offset: Point = { x: 0, y: 0 }): Figure {
     const x1 = point.x - offset.x;
     const y1 = point.y - offset.y;
     const x2 = x1 + this.width;
     const y2 = y1 + this.height;
-    this.point1 = { x: x1, y: y1 };
-    this.point2 = { x: x2, y: y2 };
+    const point1 = { x: x1, y: y1 };
+    const point2 = { x: x2, y: y2 };
+    return this.clone({ ...this, point1, point2 });
   }
 
-  resize(point: Point, position: CursorPosition = CursorPosition.RB) {
+  resize(point: Point, position: CursorPosition = CursorPosition.RB): Figure {
+    let { point1, point2 } = this;
+
     switch (position) {
       case CursorPosition.L: {
-        this.point1 = { x: point.x, y: this.y1 };
+        point1 = { x: point.x, y: this.y1 };
         break;
       }
       case CursorPosition.R: {
-        this.point2 = { x: point.x, y: this.y2 };
+        point2 = { x: point.x, y: this.y2 };
         break;
       }
       case CursorPosition.T: {
-        this.point1 = { x: this.x1, y: point.y };
+        point1 = { x: this.x1, y: point.y };
         break;
       }
       case CursorPosition.B: {
-        this.point2 = { x: this.x2, y: point.y };
+        point2 = { x: this.x2, y: point.y };
         break;
       }
       case CursorPosition.LT: {
-        this.point1 = point;
+        point1 = point;
         break;
       }
       case CursorPosition.LB: {
-        this.point1 = { x: point.x, y: this.y1 };
-        this.point2 = { x: this.x2, y: point.y };
+        point1 = { x: point.x, y: this.y1 };
+        point2 = { x: this.x2, y: point.y };
         break;
       }
       case CursorPosition.RT: {
-        this.point1 = { x: this.x1, y: point.y };
-        this.point2 = { x: point.x, y: this.y2 };
+        point1 = { x: this.x1, y: point.y };
+        point2 = { x: point.x, y: this.y2 };
         break;
       }
       case CursorPosition.RB: {
-        this.point2 = point;
+        point2 = point;
         break;
       }
     }
-    //this.clone({...this, point1, point2})
+    return this.clone({ ...this, point1, point2 });
+  }
+
+  select({ x, y }: Point): Figure {
+    const offset = { x: x - this.x1, y: y - this.y1 };
+    const position = this.cursorPosition({ x, y });
+    return this.clone({ ...this, offset, position, selected: true });
   }
 
   protected isNearPoint(point1: Point, point2: Point): boolean {

@@ -50,41 +50,37 @@ export default function FrontCanvas({ width, height }: Size) {
 
   function handleMouseDown({ target, pageX, pageY }: MouseEvent) {
     if (target !== canvasRef.current) return;
-    const { x, y } = realCoords({ x: pageX, y: pageY }, offset, scale);
+
+    const point = realCoords({ x: pageX, y: pageY }, offset, scale);
 
     if (isDrawingMode) {
-      const figure = FigureFactory.createFigure(tool, options, { x, y });
-      setCurrent(figure);
+      setCurrent(FigureFactory.createFigure(tool, options, point));
     } else {
-      dispatch({ type: 'select', point: { x, y } });
+      dispatch({ type: 'select_figure', point: point });
     }
   }
 
   function handleMouseMove({ target, buttons, pageX, pageY }: MouseEvent) {
-    const { x, y } = realCoords({ x: pageX, y: pageY }, offset, scale);
+    const point = realCoords({ x: pageX, y: pageY }, offset, scale);
 
     if (!isDrawingMode && !buttons) {
       const currentTarget = target as HTMLElement;
-      currentTarget.style.cursor = cursorByPoint(figures, { x, y });
+      currentTarget.style.cursor = cursorByPoint(figures, point);
       return;
     }
 
     if (current) {
-      const copy = current.clone();
-      copy.resize({ x, y });
-      setCurrent(copy);
+      setCurrent(current.resize(point));
     } else {
-      dispatch({ type: 'drag', point: { x, y } });
+      dispatch({ type: 'drag_figure', point: point });
     }
   }
 
   function handleMouseUp({ target }: Event) {
-    if (target !== canvasRef.current) return;
+    if (!current || target !== canvasRef.current) return;
 
-    if (current) {
-      dispatch({ type: 'add', figure: current });
-      setCurrent(null);
-    }
+    dispatch({ type: 'add_figure', figure: current });
+    setCurrent(null);
   }
 
   return (
