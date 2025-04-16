@@ -11,6 +11,8 @@ export function useDrawingCanvas() {
 
   function startDrawing(point: Point) {
     const figure = createFigure(id, tool, options, point);
+    if (!figure) return;
+
     dispatch({ type: 'add_current', figure });
     setId(id + 1);
   }

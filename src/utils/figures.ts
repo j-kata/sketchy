@@ -1,6 +1,6 @@
 import { RoughCanvas } from 'roughjs/bin/canvas';
 import { CursorPosition } from '../types/CursorPosition';
-import { Figure, FigureType } from '../types/Figure';
+import { Figure, toolToFigureTypeMap } from '../types/Figure';
 import { Options } from '../types/options';
 import { Point } from '../types/Point';
 import { Tool } from '../types/Tool';
@@ -29,13 +29,16 @@ export function createFigure(
   tool: Tool,
   options: Options,
   point: Point
-): Figure {
+): Figure | null {
+  const type = toolToFigureTypeMap[tool];
+  if (!type) return null;
+
   return {
     id,
+    type,
     point1: point,
     point2: point,
     options: { ...options, seed: generateSeed() },
-    type: defineType(tool),
     position: CursorPosition.RB,
     offset: { x: 0, y: 0 },
   };
@@ -121,14 +124,6 @@ export function pointWithin(figure: Figure, point: Point) {
 
 export function cursorPosition(figure: Figure, point: Point) {
   return ElementTypes[figure.type]?.cursorPosition(figure, point);
-}
-
-function defineType(tool: Tool) {
-  return tool == Tool.ELLIPSE
-    ? FigureType.ELLIPSE
-    : tool == Tool.SQUARE
-    ? FigureType.RECTANGLE
-    : FigureType.LINE;
 }
 
 function generateSeed() {
