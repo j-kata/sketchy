@@ -1,20 +1,33 @@
-import Figure from '../models/Figure';
+import { Figure } from '../types/Figure';
 import { Point } from '../types/Point';
 import { Options } from '../types/options';
 import { Tool } from '../types/Tool';
 
 export type EditorAction =
   | {
-      type: 'add_figure';
+      type: 'add_current';
       figure: Figure;
     }
   | {
-      type: 'select_figure';
-      point: Point;
+      type: 'update_current';
+      figure: Figure;
     }
   | {
-      type: 'drag_figure';
-      point: Point;
+      type: 'end_current';
+    }
+  | {
+      type: 'reset_selected';
+    }
+  | {
+      type: 'drag_selected';
+      figure: Figure;
+    }
+  | {
+      type: 'resize_selected';
+      figure: Figure;
+    }
+  | {
+      type: 'finish_selected';
     }
   | {
       type: 'change_options';

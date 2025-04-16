@@ -5,6 +5,7 @@ import { useContextSafe } from '../../hooks/useContextSafe';
 import { CanvasContext } from '../../contexts/CanvasContext';
 import { EditorContext } from '../../contexts/EditorContext';
 import { Size } from '../../types/Size';
+import { draw } from '../../utils/figures';
 
 export default function BackCanvas({ width, height }: Size) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -17,7 +18,7 @@ export default function BackCanvas({ width, height }: Size) {
     const context = canvas.getContext('2d')!;
     context.clearRect(0, 0, width, height);
     figures.forEach((figure) =>
-      figure.draw(rough.canvas(canvas), offset, scale)
+      draw(figure, rough.canvas(canvas), offset, scale)
     );
   }, [figures, scale, offset, width, height]);
 

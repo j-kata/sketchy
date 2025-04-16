@@ -18,6 +18,7 @@ const initialValues = {
     fill: Fill.TRANSPARENT,
     fillStyle: FillStyle.SOLID,
   },
+  current: null,
   figures: [],
 };
 

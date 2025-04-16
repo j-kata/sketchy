@@ -7,11 +7,11 @@ export enum Stroke {
 }
 
 export enum StrokeWidth {
-  XS = '1',
-  SM = '2',
-  MD = '3',
-  LG = '4',
-  XL = '5',
+  XS = 1,
+  SM = 2,
+  MD = 3,
+  LG = 4,
+  XL = 5,
 }
 
 export enum Fill {

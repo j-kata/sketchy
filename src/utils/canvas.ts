@@ -2,6 +2,8 @@ import Figure from '../models/Figure';
 import { CursorPosition } from '../types/CursorPosition';
 import { Point } from '../types/Point';
 
+const MAX_DISTANCE = 5;
+
 export function realCoords(point: Point, offset: Point, scale: number) {
   return {
     x: (point.x - offset.x) / scale,
@@ -9,18 +11,23 @@ export function realCoords(point: Point, offset: Point, scale: number) {
   };
 }
 
-export function figureByPoint(elements: Figure[], point: Point) {
-  return elements.find((el) => el.isWithinElement(point));
+export function isNearPoint(point1: Point, point2: Point): boolean {
+  return (
+    Math.abs(point1.x - point2.x) < MAX_DISTANCE &&
+    Math.abs(point1.y - point2.y) < MAX_DISTANCE
+  );
 }
 
-export function cursorByPoint(elements: Figure[], point: Point) {
-  const element = figureByPoint(elements, point);
-  if (element) {
-    const position = element.cursorPosition(point);
-    return cursorStyle(position);
-  } else {
-    return 'default';
-  }
+export function isNearLine(point: Point, startPoint: Point, endPoint: Point) {
+  const offset =
+    distance(startPoint, endPoint) -
+    distance(startPoint, point) -
+    distance(endPoint, point);
+  return Math.abs(offset) < 1;
+}
+
+export function distance(a: Point, b: Point): number {
+  return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 }
 
 export function cursorStyle(position: CursorPosition): string {
@@ -48,13 +55,4 @@ export function cursorStyle(position: CursorPosition): string {
       return 'default';
     }
   }
-}
-
-export function unselectAll(figures: Figure[]): Figure[] {
-  return figures.map((f) => (f.selected ? f.clone({ selected: false }) : f));
-}
-
-export function replaceFigure(figures: Figure[], figure?: Figure | null) {
-  if (!figure) return figures;
-  return figures.map((f) => (f.id === figure.id ? figure : f));
 }
